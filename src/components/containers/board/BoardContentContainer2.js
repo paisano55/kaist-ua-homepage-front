@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import qs from "qs";
 import { withRouter } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import BoardContent from "../../templates/BoardContent";
+import BoardContent2 from "../../templates/BoardContent2";
 import * as boardsAPI from "../../../lib/api/board";
 import * as postsAPI from "../../../lib/api/post";
 import { setBoards2 } from "../../../modules/boards";
@@ -48,7 +48,7 @@ const BoardContentContainer2 = ({ location, boardId, history }) => {
     getBoardsList();
   }, [dispatch, location.search, getBoardsList]);
 
-  return <BoardContent boards={boards} boardId={boardId} posts={posts} />;
+  return <BoardContent2 boards={boards} boardId={boardId} posts={posts} />;
 };
 
 export default withRouter(BoardContentContainer2);

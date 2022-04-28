@@ -1,4 +1,5 @@
 export { default as BoardContent } from "./BoardContent";
+export { default as BoardContent2 } from "./BoardContent2";
 export { default as PetitionBoardContent } from "./PetitionBoardContent";
 export { default as EditorContent } from "./EditorContent";
 export { default as PetitionEditorContent } from "./PetitionEditorContent";

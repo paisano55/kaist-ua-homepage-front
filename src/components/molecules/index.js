@@ -5,5 +5,6 @@ export { default as BoardHeader } from "./BoardHeader";
 export { default as BoardRow } from "./BoardRow";
 export { default as PetitionBoardRow } from "./PetitionBoardRow";
 export { default as BoardFooter } from "./BoardFooter";
+export { default as BoardFooter2 } from "./BoardFooter2";
 export { default as PetitionBoardFooter } from "./PetitionBoardFooter";
 export { default as EditorFormGroup } from "./EditorFormGroup";
