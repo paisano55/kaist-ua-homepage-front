@@ -7,7 +7,7 @@ import { withRouter } from "react-router-dom";
 import * as postsAPI from "../../../lib/api/post";
 import * as boardsAPI from "../../../lib/api/board";
 
-const IntroEditorContentContainer = ({ history, mainId, subId }) => {
+const IntroEditorContentContainer = ({ history, postId, boardId }) => {
     const dispatch = useDispatch();
     const post = useSelector(({ post }) => post);
 
