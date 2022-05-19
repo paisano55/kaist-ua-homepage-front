@@ -8,6 +8,7 @@ export { default as PetitionViewPage } from "./PetitionViewPage";
 export { default as EditPage } from "./EditPage";
 export { default as PetitionEditPage } from "./PetitionEditPage";
 export { default as IntroductionPage } from "./IntroductionPage";
+export { default as IntroEditPage } from "./IntroEditPage";
 export { default as AuthAgreementPage } from "./AuthAgreementPage";
 export { default as AdminPaymentPage } from "./AdminPaymentPage";
 export { default as StudentFeePage } from "./StudentFeePage";

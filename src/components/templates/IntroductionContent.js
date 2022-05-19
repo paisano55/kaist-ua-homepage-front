@@ -6,7 +6,7 @@ import { Row, Col, Tab, Container } from "react-bootstrap";
 
 import "./IntroductionContent.scss";
 
-const IntroductionContent = () => {
+const IntroductionContent = ({ intros }) => {
   //const introList = introData.data.map(data => <ListGroup.Item action href={data.link}>{data.title}</ListGroup.Item>);
   //const introContent = introData.data.map(data => <Tab.Pane eventKey={data.link}>{data.content}</Tab.Pane>);
   return (

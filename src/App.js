@@ -32,6 +32,7 @@ function App() {
       <Route path="/web/main" component={pages.MainPage} />
 
       <Route path="/web/introduction" component={pages.IntroductionPage} />
+      <Route path="/web/introduction/edit/" component={pages.IntroEditPage} />
       <Route path="/web/board/:boardId" component={pages.BoardPage} />
       <Route path="/web/welfare" component={pages.WelfarePage} />
       <Route path="/web/petition/:petitionId" component={pages.PetitionViewPage} />
@@ -39,7 +40,7 @@ function App() {
       <Route path="/web/post/:postId" component={pages.PostViewPage} />
 
       {/* Admin */}
-      <Route path="/web/admin/login" component={pages.AdminLoginPage} />
+      <Route path="/web/admin/adminlogin" component={pages.AdminLoginPage} />
       <ProtectedRoute
         path="/web/admin/payment"
         component={pages.AdminPaymentPage}
