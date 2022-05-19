@@ -8,7 +8,7 @@ import { setBoards } from "../../../modules/boards";
 import { listPosts } from "../../../modules/posts";
 import { isEmpty } from "lodash";
 
-const IntroductionContentContainer = ({ location, history }) => {
+const EditableIntroductionContentContainer = ({ location, history }) => {
   const dispatch = useDispatch();
   const { posts, boards } = useSelector(({ posts, boards }) => ({
     posts: posts.posts,
@@ -62,7 +62,7 @@ const IntroductionContentContainer = ({ location, history }) => {
     getBoardsList();
   }, [dispatch, location.search, getBoardsList]);
 
-  return <IntroductionContent />;
+  return <EditableIntroductionContent intros={intros} />;
 };
 
-export default withRouter(IntroductionContentContainer);
+export default withRouter(EditableIntroductionContentContainer);
