@@ -8,7 +8,7 @@ import * as postsAPI from "../../../lib/api/post";
 import * as boardsAPI from "../../../lib/api/board";
 import * as introAPI from "../../../lib/api/intro"
 
-const IntroEditorContentContainer = ({ history, mainId, subId }) => {
+const IntroEditorContentContainer = ({ history, postId, boardId }) => {
     const dispatch = useDispatch();
     const post = useSelector(({ post }) => post);
 
