@@ -32,7 +32,12 @@ function App() {
       <Route path="/web/main" component={pages.MainPage} />
 
       <Route path="/web/introduction" component={pages.IntroductionPage} />
-      <Route path="/web/introduction/edit/" component={pages.IntroEditPage} />
+      <Route
+        path="/web/introduction/edit/:mainId"
+        component={pages.IntroEditPage}
+        exact={true}
+      />
+      <Route path="/web/introduction/edit/:mainId/:subId" component={pages.IntroEditPage} />
       <Route path="/web/board/:boardId" component={pages.BoardPage} />
       <Route path="/web/welfare" component={pages.WelfarePage} />
       <Route path="/web/petition/:petitionId" component={pages.PetitionViewPage} />

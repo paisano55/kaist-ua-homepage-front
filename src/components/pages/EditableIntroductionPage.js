@@ -3,8 +3,7 @@ import React from "react";
 import { Header, Footer } from "../organisms";
 import IntroductionContentContainer from "../containers/introduction/IntroductionContentContainer";
 
-const EditableIntroductionPage = props => {
-    const { boardId } = props.match.params;
+const EditableIntroductionPage = () => {
     return (
         <div
             style={{ minHeight: "100vh", fontFamily: "NanumSquare" }}

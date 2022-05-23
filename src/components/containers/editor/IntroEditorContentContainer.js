@@ -6,6 +6,7 @@ import { EditorContent } from "../../templates";
 import { withRouter } from "react-router-dom";
 import * as postsAPI from "../../../lib/api/post";
 import * as boardsAPI from "../../../lib/api/board";
+import * as introAPI from "../../../lib/api/intro"
 
 const IntroEditorContentContainer = ({ history, mainId, subId }) => {
     const dispatch = useDispatch();

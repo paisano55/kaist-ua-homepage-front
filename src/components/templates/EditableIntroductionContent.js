@@ -15,10 +15,10 @@ const EditableIntroductionContent = ({ intros }) => {
             <Tab.Container defaultActiveKey="#1">
                 <Row>
                     <Col sm={5} md={4} lg={3} style={{ paddingBottom: "15px" }}>
-                        <EditableIntroductionList />
+                        <EditableIntroductionList intros={intros} />
                     </Col>
                     <Col>
-                        <EdiatableIntroductionPane />
+                        <EditableIntroductionPane />
                     </Col>
                 </Row>
             </Tab.Container>

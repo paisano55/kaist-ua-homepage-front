@@ -2,27 +2,23 @@ import axios from "axios";
 import baseURL from "../baseURL";
 import qs from "qs";
 
-const posts = axios.create({
+const intros = axios.create({
     baseURL: `${baseURL}/intro`,
     withCredentials: true
 });
 
-export const write = post => posts.post("", post);
+export const write = intro => intros.post("", intro);
 
-export const read = ({ id, subId }) => posts.get(`/${id}/${subId}`);
+export const read = ({ id, subId }) => intros.get(`/${id}/${subId}`);
 
-export const list = ({ page, author, title, boardId }) => {
-    const BoardId = boardId;
+export const list = ({ title }) => {
     const queryString = qs.stringify({
-        page,
-        author,
-        title,
-        BoardId
+        title
     });
-    return posts.get(`?${queryString}`);
+    return intros.get(`?${queryString}`);
 };
 
-export const update = (id, post) =>
-    posts.patch(`${id}`, post);
+export const update = (id, subId, intro) =>
+    intros.patch(`${id}/${subId}`, intro);
 
-export const remove = id => posts.delete(`${id}`);
+export const remove = ({ id, subId }) => intros.delete(`${id}/${subId}`);
