@@ -10,7 +10,7 @@ const initialState = {
 
 const intros = handleActions(
     {
-        [LIST_POSTS]: (state, { payload: { intros } }) => ({
+        [LIST_INTROS]: (state, { payload: { intros } }) => ({
             ...state,
             intros
         }),

@@ -33,11 +33,11 @@ function App() {
 
       <Route path="/web/introduction" component={pages.IntroductionPage} />
       <Route
-        path="/web/introduction/edit/:mainId"
+        path="/web/admin/edit/introduction"
         component={pages.IntroEditPage}
         exact={true}
       />
-      <Route path="/web/introduction/edit/:mainId/:subId" component={pages.IntroEditPage} />
+      <Route path="/web/admin/edit/introduction/:id" component={pages.IntroEditPage} />
       <Route path="/web/board/:boardId" component={pages.BoardPage} />
       <Route path="/web/welfare" component={pages.WelfarePage} />
       <Route path="/web/petition/:petitionId" component={pages.PetitionViewPage} />

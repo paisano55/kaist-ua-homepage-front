@@ -3,7 +3,7 @@ import { Header, Footer } from "../organisms";
 import IntroEditorContentContainer from "../containers/editor/IntroEditorContentContainer";
 
 const IntroEditPage = props => {
-    const { mainId, subId } = props.match.params;
+    const { id } = props.match.params;
     return (
         <div
             style={{
@@ -14,7 +14,7 @@ const IntroEditPage = props => {
             className="d-flex flex-column"
         >
             <Header active="0" />
-            <IntroEditorContentContainer mainId={mainId} subId={subId} />
+            <IntroEditorContentContainer id={id} />
             <Footer />
         </div>
     );

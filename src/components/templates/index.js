@@ -2,6 +2,7 @@ export { default as BoardContent } from "./BoardContent";
 export { default as BoardContent2 } from "./BoardContent2";
 export { default as PetitionBoardContent } from "./PetitionBoardContent";
 export { default as EditorContent } from "./EditorContent";
+export { default as IntroEditorContent } from "./IntroEditorContent";
 export { default as PetitionEditorContent } from "./PetitionEditorContent";
 export { default as HomeContent } from "./HomeContent";
 export { default as AdminLoginContent } from "./AdminLoginContent";

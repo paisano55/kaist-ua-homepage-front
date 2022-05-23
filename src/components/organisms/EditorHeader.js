@@ -24,7 +24,7 @@ const EditorHeader = ({ onChangeField }) => {
           />
           <EditorFormGroup
             groupAs={Col}
-            label="작성자 (영어)"
+            label="Author (English)"
             placeholder="예) Hyunsik Yoon"
             onChange={e => onChange("engAuthor", e)}
             value={post.engAuthor}
@@ -36,7 +36,7 @@ const EditorHeader = ({ onChangeField }) => {
           value={post.korTitle}
         />
         <EditorFormGroup
-          label="제목 (영어)"
+          label="Title (English)"
           onChange={e => onChange("engTitle", e)}
           value={post.engTitle}
         />

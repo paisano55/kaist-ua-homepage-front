@@ -3,22 +3,17 @@ import baseURL from "../baseURL";
 import qs from "qs";
 
 const intros = axios.create({
-    baseURL: `${baseURL}/intro`,
+    baseURL: `${baseURL}/intros`,
     withCredentials: true
 });
 
 export const write = intro => intros.post("", intro);
 
-export const read = ({ id, subId }) => intros.get(`/${id}/${subId}`);
+export const read = ({ id }) => intros.get(`/${id}`);
 
-export const list = ({ title }) => {
-    const queryString = qs.stringify({
-        title
-    });
-    return intros.get(`?${queryString}`);
-};
+export const list = () => intros.get("");
 
-export const update = (id, subId, intro) =>
-    intros.patch(`${id}/${subId}`, intro);
+export const update = (id, intro) =>
+    intros.patch(`/${id}`, intro);
 
-export const remove = ({ id, subId }) => intros.delete(`${id}/${subId}`);
+export const remove = ({ id }) => intros.delete(`/${id}`);
