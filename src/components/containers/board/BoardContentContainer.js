@@ -58,7 +58,7 @@ const BoardContentContainer = ({ location, boardId, history }) => {
       })
       .catch(err => console.log(err));
   }, [dispatch, author, boardId, page, korTitle, engTitle]);
-
+  
   useEffect(() => {
     getBoardsList();
   }, [dispatch, location.search, getBoardsList]);

@@ -9,5 +9,6 @@ export { default as AdminLoginContent } from "./AdminLoginContent";
 export { default as PostViewer } from "./PostViewer";
 export { default as PetitionViewer } from "./PetitionViewer";
 export { default as IntroductionContent } from "./IntroductionContent";
+export { default as EditableIntroductionContent } from "./EditableIntroductionContent";
 export { default as AuthAgreementContent } from "./AuthAgreementContent";
 export { default as AuthAgreementPreviousContent } from "./AuthAgreementPreviousContent";

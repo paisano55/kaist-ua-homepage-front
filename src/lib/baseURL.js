@@ -1,1 +1,1 @@
-export default process.env.REACT_APP_API_URL;
+export default "http://channeltalk.sparcs.org:8080";

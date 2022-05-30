@@ -1,6 +1,5 @@
 import axios from "axios";
 import baseURL from "../baseURL";
-import qs from "qs";
 
 const intros = axios.create({
     baseURL: `${baseURL}/intros`,
@@ -9,11 +8,10 @@ const intros = axios.create({
 
 export const write = intro => intros.post("", intro);
 
-export const read = ({ id }) => intros.get(`/${id}`);
+export const read = id => intros.get(`/${id}`);
 
 export const list = () => intros.get("");
 
-export const update = (id, intro) =>
-    intros.patch(`/${id}`, intro);
+export const update = (id, intro) => intros.patch(`/${id}`, intro);
 
-export const remove = ({ id }) => intros.delete(`/${id}`);
+export const remove = id => intros.delete(`/${id}`);

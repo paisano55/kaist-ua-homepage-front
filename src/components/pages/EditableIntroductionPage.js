@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Header, Footer } from "../organisms";
-import IntroductionContentContainer from "../containers/introduction/IntroductionContentContainer";
+import EditableIntroductionContentContainer from "../containers/introduction/EditableIntroductionContentContainer";
 
 const EditableIntroductionPage = () => {
     return (
@@ -10,7 +10,7 @@ const EditableIntroductionPage = () => {
             className="d-flex flex-column"
         >
             <Header active="0" />
-            <IntroductionContentContainer />
+            <EditableIntroductionContentContainer />
             <Footer />
         </div>
     );
