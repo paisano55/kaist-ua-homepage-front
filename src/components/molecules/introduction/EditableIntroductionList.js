@@ -1,73 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import { ListGroup } from "react-bootstrap";
 
-const EditableIntroductionList = ({ intros }) => {
-    /* const listData2 = intros.map(intro => ({
-        link: !intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`,
-        title: intro.title,
-        isSubTab: !!intro.subId
-    })) */
-    const listData2 = [
-        {
-          link: "#1",
-          title: "총학생회 소개"
-        },
-        {
-          link: "#3_1",
-          title: "중앙집행위원회"
-        },
-        {
-          link: "#3_2",
-          title: "서기실",
-          isSubTab: true
-        },
-        {
-          link: "#3_3",
-          title: "집행지원실",
-          isSubTab: true
-        },
-        {
-          link: "#3_4",
-          title: "정책국",
-          isSubTab: true
-        },
-        {
-          link: "#3_5",
-          title: "복지국",
-          isSubTab: true
-        },
-        {
-          link: "#3_7",
-          title: "사무국",
-          isSubTab: true
-        },
-        {
-          link: "#3_8",
-          title: "디자인국",
-          isSubTab: true
-        },
-        {
-          link: "#3_9",
-          title: "정보국",
-          isSubTab: true
-        },
-        {
-          link: "#4",
-          title: "의결기구 소개"
-        },
-        {
-          link: "#5",
-          title: "산하기구 소개"
-        }
-      ];
-    const listData = listData2.filter(intro => !intro.isSubTab)
-
+const EditableIntroductionList = (intros) => {
+    const [listData2, setListData2] = useState([]);
+    const [listData, setListData1] = useState([]);
     const [tabList, setTabList] = useState(listData);
     const [subTabs, setSubTabs] = useState(false);
+
+    const listConvert = useCallback(() => {
+        setListData2(intros.intros? intros.intros.map(intro => ({
+            link: !intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`,
+            title: intro.korTitle,
+            isSubTab: !!intro.subId,
+            isParent: false
+        })) : [
+            {
+                link: "#1",
+                title: "Load",
+                isSubTab: false
+            }
+        ]);
+        setListData1(listData2.filter(intro => !intro.isSubTab));
+        setTabList(listData);
+    }, [intros]);
+
+    useEffect(() => {
+        listConvert();
+    }, [intros, listConvert]);
+
     const handleClick = event => {
-        const name = event.target.name;
-        if (name.substring(0, 2) === "#3") {
+        const parent = event.target.isParent;
+        if (parent) {
             setTabList(listData2);
             setSubTabs(true);
         } else {
@@ -76,14 +40,14 @@ const EditableIntroductionList = ({ intros }) => {
         }
     };
     const handleMouseEnter = event => {
-        const name = event.target.name;
-        if (name.substring(0, 2) === "#3") {
+        const parent = event.target.isParent;
+        if (parent) {
             setTabList(listData2);
         }
     };
     const handleMouseLeave = event => {
-        const name = event.target.name;
-        if (name.substring(0, 2) === "#3" && !subTabs) {
+        const parent = event.target.isParent;
+        if (parent && !subTabs) {
             setTabList(listData);
         }
     };
@@ -96,15 +60,15 @@ const EditableIntroductionList = ({ intros }) => {
                     name={tab.link}
                     action
                     key={tab.link}
-                    onClick={handleClick.bind(this)}
+                    /* onClick={handleClick.bind(this)}
                     onMouseEnter={handleMouseEnter.bind(this)}
-                    onMouseLeave={handleMouseLeave.bind(this)}
+                    onMouseLeave={handleMouseLeave.bind(this)} */
                     href={tab.link}
                     className={
                         !tab.isSubTab ? "introduction-button" : "introduction-sub-button"
                     }
-                    variant={tab.variant}
                     subTab={tab.isSubTab}
+                    parent={tab.isParent}
                 >
                     {tab.title}
                 </ListGroup.Item>

@@ -31,8 +31,7 @@ function App() {
     <Switch>
       <Route path="/web/main" component={pages.MainPage} />
 
-      <Route path="/web/introduction" component={pages.IntroductionPage} />
-      <Route path="/web/dev/introduction" component={pages.EditableIntroductionPage} />
+      <Route path="/web/introduction" component={pages.EditableIntroductionPage} />
       
       <Route
         path="/web/admin/edit/introduction"

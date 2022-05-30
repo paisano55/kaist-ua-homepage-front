@@ -5,13 +5,13 @@ import EditableIntroductionContent from "../../templates/EditableIntroductionCon
 import * as introAPI from "../../../lib/api/intro"
 import { listIntros } from "../../../modules/intros";
 
-const EditableIntroductionContentContainer = () => {
+const EditableIntroductionContentContainer = ( location ) => {
   const dispatch = useDispatch();
   const { intros } = useSelector(({ intros }) => ({
     intros: intros.intros
   }));
 
-  const getIntrosList = useCallback(() => {
+  const getIntrosList = () => {
     introAPI
       .list()
       .then(res => {
@@ -19,11 +19,11 @@ const EditableIntroductionContentContainer = () => {
         dispatch(listIntros({ intros }));
       })
       .catch(err => console.log(err));
-  });
+  };
 
   useEffect(() => {
     getIntrosList();
-  }, []);
+  }, [dispatch]);
 
   return <EditableIntroductionContent intros={intros} />;
 };
