@@ -31,7 +31,8 @@
     "학생청원": "Student Petitions",
     "공지사항": "Announcements",
     "학생 복지": "Student Welfare",
-    "name": "{{name.engName}}"
+    "name": "{{name.engName}}",
+    "예결산안": "Budget·Settlement"
   },
   "Label": {
     "label": "{{eng}}"
