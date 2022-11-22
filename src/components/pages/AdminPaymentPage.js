@@ -6,19 +6,26 @@ import { withRouter } from "react-router-dom";
 import { BoardHeader } from "../molecules";
 
 import * as paymentAPI from "../../lib/api/payment";
+import * as bannerAPI from "../../lib/api/banner";
+
+
+// Ironically, this manages not just payment but YT and banner links
 
 const AdminPaymentPage = () => {
   const [idList, setIdList] = useState([]);
   const [fileName, setFileName] = useState(null);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [showFailModal, setShowFailModal] = useState(false);
+  const [youtubeLink, setYoutubeLink] = useState(null);
+  const [mainBannerList, setMainBannerList] = useState(null);
 
-  const handleModalClose = () => handleModalOpen("");
-  const handleModalOpen = current => {
-    setShowConfirmModal(current === "confirm");
-    setShowSuccessModal(current === "success");
-    setShowFailModal(current === "fail");
+  const [showUploadConfirmModal, setShowUploadConfirmModal] = useState(false);
+  const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
+  const [showUploadFailModal, setShowUploadFailModal] = useState(false);
+
+  const handleUploadModalClose = () => handleModalOpen("");
+  const handleUploadModalOpen = current => {
+    setShowUploadConfirmModal(current === "confirm");
+    setShowUploadSuccessModal(current === "success");
+    setShowUploadFailModal(current === "fail");
   };
 
   const verifyIdList = fileContent => {
@@ -38,7 +45,7 @@ const AdminPaymentPage = () => {
 
   const handleFiles = files => {
     var reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       // Use reader.result
       setIdList(verifyIdList(reader.result.split("\n")));
     };
@@ -46,16 +53,55 @@ const AdminPaymentPage = () => {
     reader.readAsText(files[0]);
   };
 
-  const handleSubmit = () => {
+  const handleYoutubeToggle = (enable) => {
+    /*
+    1. Check YT banner exists
+    2. If exists, set to {enable}
+    */
+    bannerAPI.list().then(res => {
+      const ytBanner = res.data.filter(banner => banner.image === "Youtube Livestream (EMBED)");
+      if (ytBanner.length) {
+        bannerAPI.update(ytBanner[0].id, { isActive: enable }).then(res => {
+          console.log(res);
+        });
+      } else {
+        bannerAPI.create({ image: "Youtube Livestream (EMBED)", link: "https://www.youtube.com/channel/UCOyNLfCKA5k0PotGj4xTPmg", isActive: enable });
+      }
+    }).catch(err => {
+      console.warn(err);
+    });
+  };
+
+  const handleBannerListSubmit = (bannerListStr) => {
+    /*
+    1. Get all banners
+    2. Compare with bannerListStr
+    3. Set isActive accordingly
+    */
+    const bannerList = bannerListStr.split("\n");
+    bannerAPI.list().then(res => {
+      res.data.forEach(banner => {
+        const bannerIndex = bannerList.indexOf(banner.image);
+        const isActive = bannerIndex > -1;
+        bannerAPI.update(banner.id, { isActive }).then(res => {
+          console.log(res);
+        }).catch(err => {
+          console.warn(err);
+        });
+      });
+    });
+  };
+
+  const handlePaymentCSV = () => {
     const body = {
       studentDataCollection: idList
     };
     paymentAPI
       .bulkUpload(body)
       .then(res => {
-        handleModalOpen("success");
+        handleUploadModalOpen("success");
       })
-      .catch(err => handleModalOpen("fail"));
+      .catch(err => handleUploadModalOpen("fail"));
   };
 
   return (
@@ -63,25 +109,28 @@ const AdminPaymentPage = () => {
       style={{ minHeight: "100vh", fontFamily: "NanumSquare" }}
       className="d-flex flex-column"
     >
+
+
+
       <CustomModal
         title={`학생회비 납부 기록`}
         body={`${fileName}를 등록하시겠습니까?`}
-        show={showConfirmModal}
-        handleConfirm={handleSubmit}
-        handleClose={handleModalClose}
+        show={showUploadConfirmModal}
+        handleConfirm={handlePaymentCSV}
+        handleClose={handleUploadModalClose}
         closeMessage="취소"
         confirmMessage="확인"
       />
       <CustomModal
         title={`등록이 완료되었습니다.`}
-        show={showSuccessModal}
-        handleConfirm={handleModalClose}
+        show={showUploadSuccessModal}
+        handleConfirm={handleUploadModalClose}
         confirmMessage="확인"
       />
       <CustomModal
         title={`⚠️등록 중 오류가 발생했습니다.`}
-        show={showFailModal}
-        handleConfirm={handleModalClose}
+        show={showUploadFailModal}
+        handleConfirm={handleUploadModalClose}
         confirmMessage="확인"
       />
       <Header />
@@ -113,7 +162,55 @@ const AdminPaymentPage = () => {
           <Form.Group>
             <Button
               disabled={fileName ? false : true}
-              onClick={() => handleModalOpen("confirm")}
+              onClick={() => handleUploadModalOpen("confirm")}
+            >
+              등록
+            </Button>
+          </Form.Group>
+        </Form>
+      </Container>
+      <Container className="flex-grow-1 p-3">
+        <BoardHeader title="유튜브 배너 활성화" />
+        <Form>
+          <Form.Group>
+            <Form.Label>유튜브 링크</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="https://www.youtube.com/embed/live_stream?channel=UCOyNLfCKA5k0PotGj4xTPmg"
+              value={youtubeLink}
+              onChange={e => setYoutubeLink(e.target.value)}
+            />
+            <Form.Text className="text-muted">
+              유튜브 라이브 스트리밍용 링크를 입력해주세요.
+            </Form.Text>
+          </Form.Group>
+          <Form.Group>
+            <Button
+              disabled={youtubeLink ? false : true}
+              onClick={() => handleYoutubeToggle()}
+            >
+              등록
+            </Button>
+          </Form.Group>
+        </Form>
+      </Container>
+      <Container className="flex-grow-1 p-3">
+        <BoardHeader title="이미지 배너 관리" />
+        <Form>
+          <Form.Group>
+            <Form.Label>메인 페이지 배너 목록</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows="3"
+              value={mainBannerList}
+              onChange={e => setMainBannerList(e.target.value)}
+            />
+            <Form.Text className="text-muted">
+              메인 페이지에 띄울 배너의 이미지 링크를 입력해주세요. <br />
+              이미지 링크는 한 줄에 하나씩 입력해주세요.
+            </Form.Text>
+            <Button
+              onClick={() => handleBannerListSubmit()}
             >
               등록
             </Button>
