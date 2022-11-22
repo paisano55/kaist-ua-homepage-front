@@ -20,8 +20,8 @@ const HomeContent = ({ BoardModuleInfos }) => {
     <Container className="flex-grow-1 home-content">
       <HomeCarousel className="module" />
       <Row>{boardModules}</Row>
-      <div class="ad-banner">
-        <div class="ad-box">
+      <div className="ad-banner">
+        <div className="ad-box">
           <a href="https://student.kaist.ac.kr/wiki/">
             <img
               className="ad"
@@ -30,7 +30,7 @@ const HomeContent = ({ BoardModuleInfos }) => {
             />
           </a>
         </div>
-        <div class="ad-box">
+        <div className="ad-box">
           <a href="https://ara.kaist.ac.kr">
             <img
               className="ad"
@@ -39,7 +39,7 @@ const HomeContent = ({ BoardModuleInfos }) => {
             />
           </a>
         </div>
-        <div class="ad-box">
+        <div className="ad-box">
           <img
             className="ad"
             src="https://kaistua-web.s3.ap-northeast-2.amazonaws.com/ad-legochembio.jpg"
