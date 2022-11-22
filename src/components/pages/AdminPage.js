@@ -9,9 +9,9 @@ import * as paymentAPI from "../../lib/api/payment";
 import * as bannerAPI from "../../lib/api/banner";
 
 
-// Ironically, this manages not just payment but YT and banner links
+// Site Management page for admin
 
-const AdminPaymentPage = () => {
+const AdminPage = () => {
   const [idList, setIdList] = useState([]);
   const [fileName, setFileName] = useState(null);
   const [youtubeLink, setYoutubeLink] = useState(null);
@@ -21,7 +21,7 @@ const AdminPaymentPage = () => {
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
   const [showUploadFailModal, setShowUploadFailModal] = useState(false);
 
-  const handleUploadModalClose = () => handleModalOpen("");
+  const handleUploadModalClose = () => handleUploadModalOpen("");
   const handleUploadModalOpen = current => {
     setShowUploadConfirmModal(current === "confirm");
     setShowUploadSuccessModal(current === "success");
@@ -222,4 +222,4 @@ const AdminPaymentPage = () => {
   );
 };
 
-export default withRouter(AdminPaymentPage);
+export default withRouter(AdminPage);

@@ -11,5 +11,5 @@ export { default as IntroductionPage } from "./IntroductionPage";
 export { default as EditableIntroductionPage } from "./EditableIntroductionPage";
 export { default as IntroEditPage } from "./IntroEditPage";
 export { default as AuthAgreementPage } from "./AuthAgreementPage";
-export { default as AdminPaymentPage } from "./AdminPaymentPage";
+export { default as AdminPage } from "./AdminPage";
 export { default as StudentFeePage } from "./StudentFeePage";

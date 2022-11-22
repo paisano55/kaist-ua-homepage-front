@@ -30,10 +30,7 @@ function App() {
   return (
     <Switch>
       <Route path="/web/main" component={pages.MainPage} />
-
       <Route path="/web/introduction" component={pages.EditableIntroductionPage} />
-
-      <Route path="/web/admin/edit/introduction/:id" component={pages.IntroEditPage} />
       <Route path="/web/board/:boardId" component={pages.BoardPage} />
       <Route path="/web/welfare" component={pages.WelfarePage} />
       <Route path="/web/petition/:petitionId" component={pages.PetitionViewPage} />
@@ -47,9 +44,11 @@ function App() {
         component={pages.IntroEditPage}
         exact={true}
       />
+      <ProtectedRoute path="/web/admin/edit/introduction/:id" component={pages.IntroEditPage} />
       <ProtectedRoute
-        path="/web/admin/payment"
-        component={pages.AdminPaymentPage}
+        path="/web/admin/"
+        component={pages.AdminPage}
+        exact={true}
       />
       <ProtectedRoute
         path="/web/admin/edit/:boardId"

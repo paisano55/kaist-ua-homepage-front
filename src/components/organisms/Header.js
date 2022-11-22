@@ -56,9 +56,14 @@ const Header = ({ history, ...props }) => {
     };
     if (auth === "admin")
       setAuthButtonBar(
-        <Nav.Link className="header-admin-logout" onClick={tryLogout}>
-          {t("어드민 로그아웃")}
-        </Nav.Link>
+        <>
+          <Nav.Link className="header-admin-logout" onClick={tryLogout}>
+            {t("어드민 로그아웃")}
+          </Nav.Link>
+          <Nav.Link className="header-admin-adminpage" href="/web/admin">
+            {t("관리 페이지")}
+          </Nav.Link>
+        </>
       );
     else if (auth === "student")
       setAuthButtonBar(
