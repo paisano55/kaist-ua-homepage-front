@@ -34,7 +34,10 @@ const StudentFeePage = () => {
 
   const { t } = useTranslation(["StudentFeePage", "Label"]);
 
-  const paymentDeadline = new Date() < new Date(2020, 9, 19);
+  const paymentDeadline = new Date(2020, 9, 19);
+  const beforePaymentDeadline = new Date() <= paymentDeadline;
+  const paymentDate = new Date(2020, 11, 10);
+  const today = new Date();
   const handleModalCloseAndRefresh = () => {
     handleModalOpen("");
     window.location.reload(false);
@@ -47,7 +50,7 @@ const StudentFeePage = () => {
 
   // const handleClose = () => setShow(false);
   const handleShow = () => {
-    if (!paymentDeadline) {
+    if (!beforePaymentDeadline) {
       alert(t("납부 기간이 지났습니다."));
       return;
     }
@@ -71,10 +74,10 @@ const StudentFeePage = () => {
     });
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = (year, semester) => {
     if (cancelPayment) {
       cancelRequestAPI
-        .write({ year: 2020, semester: "fall" })
+        .write({ year: year, semester: semester })
         .then(res => {
           handleModalOpen("success");
         })
@@ -83,7 +86,7 @@ const StudentFeePage = () => {
         });
     } else {
       cancelRequestAPI
-        .remove({ year: 2020, semester: "fall" })
+        .remove({ year: year, semester: semester })
         .then(res => {
           handleModalOpen("success");
         })
@@ -189,50 +192,56 @@ const StudentFeePage = () => {
           </Col>
         </Row>
         <div className="divider" />
-        <Row className="d-flex align-items-center payment-row">
-          <Col lg={7}>
-            <span style={{ fontSize: "15pt", fontFamily: "NanumSquare Bold" }}>
-              {t("2020년 가을학기")}
-            </span>
-            {paymentDeadline ? (
-              <span
-                style={{ fontSize: "10pt", color: "#0a0", paddingLeft: "10px" }}
-              >
-                {t("Label:label", {
-                  kor: "10월 18일까지 변경 가능",
-                  eng: "Changes accepted until Oct. 18"
-                })}
-              </span>
-            ) : (
-              <span
-                style={{ fontSize: "10pt", color: "#a00", paddingLeft: "10px" }}
-              >
-                {t("Label:label", {
-                  kor: "변경 기간이 지났습니다.",
-                  eng: "The payment decision period has ended."
-                })}
-              </span>
-            )}
-          </Col>
-          {cancelPayment ? (
-            <Col lg={3} className="d-flex" style={{ color: "#888" }}>
-              {t("납부 안함")}
-            </Col>
-          ) : (
-            <Col lg={3} className="d-flex">
-              {t("Label:label", {
-                kor: "11월 10일 납부 예정",
-                eng: "Will be charged on Nov. 10"
-              })}
-            </Col>
-          )}
-          <Col lg={2} className="d-flex justify-content-end">
-            <Button disabled={!paymentDeadline} onClick={handleShow}>
-              {t("변경하기")}
-            </Button>
-          </Col>
-        </Row>
-        <div className="divider" />
+        {
+          !beforePaymentDeadline ?
+            <>
+              <Row className="d-flex align-items-center payment-row">
+                <Col lg={7}>
+                  <span style={{ fontSize: "15pt", fontFamily: "NanumSquare Bold" }}>
+                    {today.getFullYear()}
+                    {t("년")} {today.getMonth() > 8 ? t("가을") : t("봄")}
+                    {t("학기")}
+                  </span>
+                  {beforePaymentDeadline ? (
+                    <span
+                      style={{ fontSize: "10pt", color: "#0a0", paddingLeft: "10px" }}
+                    >
+                      {t("Label:label", {
+                        kor: paymentDeadline.toLocaleDateString() + "까지 변경 가능",
+                        eng: "Changes accepted until " + paymentDeadline.toLocaleDateString()
+                      })}
+                    </span>
+                  ) : (
+                    <span
+                      style={{ fontSize: "10pt", color: "#a00", paddingLeft: "10px" }}
+                    >
+                      {t("Label:label", {
+                        kor: "변경 기간이 지났습니다.",
+                        eng: "The payment decision period has ended."
+                      })}
+                    </span>
+                  )}
+                </Col>
+                {cancelPayment ? (
+                  <Col lg={3} className="d-flex" style={{ color: "#888" }}>
+                    {t("납부 안함")}
+                  </Col>
+                ) : (
+                  <Col lg={3} className="d-flex">
+                    {t("Label:label", {
+                      kor: paymentDate.toLocaleDateString() + " 납부 예정",
+                      eng: "Will be charged on " + paymentDate.toLocaleDateString()
+                    })}
+                  </Col>
+                )}
+                <Col lg={2} className="d-flex justify-content-end">
+                  <Button disabled={!beforePaymentDeadline} onClick={handleShow}>
+                    {t("변경하기")}
+                  </Button>
+                </Col>
+              </Row> <div className="divider" />
+            </> : null
+        }
         {loading ? (
           <Container className="payments-loading">
             <Spinner animation="border" />
