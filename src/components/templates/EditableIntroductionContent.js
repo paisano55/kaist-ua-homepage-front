@@ -4,9 +4,13 @@ import { default as EditableIntroductionList } from "../molecules/introduction/E
 import { default as EditableIntroductionPane } from "../molecules/introduction/EditableIntroductionPane";
 import { Row, Col, Tab, Container, Button } from "react-bootstrap";
 
+import { useSelector } from "react-redux";
+
 import "./IntroductionContent.scss";
 
 const EditableIntroductionContent = ({ intros }) => {
+    const { auth } = useSelector(state => state.auth);
+
     return (
         <Container className="flex-grow-1 introduction-content">
             <div className="introduction-header-title">총학 소개 </div>
@@ -20,6 +24,28 @@ const EditableIntroductionContent = ({ intros }) => {
                     </Col>
                 </Row>
             </Tab.Container>
+            {auth === "admin" ? (
+                <Button
+                    variant="outline-primary"
+                    className="h-100 d-inline-block"
+                    href="/web/admin/edit/introduction"
+                >
+                    대항목 추가
+                </Button>
+            ) : (
+                <div />
+            )}
+            {auth === "admin" ? (
+                <Button
+                    variant="outline-primary"
+                    className="h-100 d-inline-block"
+                    href="/web/admin/edit/introduction"
+                >
+                    소항목 추가
+                </Button>
+            ) : (
+                <div />
+            )}
         </Container>
     );
 };
