@@ -3,88 +3,102 @@ import React, { useState, useEffect, useCallback } from "react";
 import { ListGroup } from "react-bootstrap";
 
 const EditableIntroductionList = (intros) => {
-    const [listData2, setListData2] = useState([]);
-    const [listData, setListData1] = useState([]);
-    const [tabList, setTabList] = useState([]);
-    const [subTabs, setSubTabs] = useState(true);
+    const [parentList, setParentList] = useState([]);
+    const [clicked, setClicked] = useState();
+
+    const ParentTab = ({ parent, children }) => {
+        const [collpased, setCollpased] = useState(false);
+
+        const handleClick = event => {
+            const name = event.target.name;
+            setClicked(name);
+        };
+
+        if (children.length > 0) {
+            return (
+                <>
+                    <ListGroup.Item
+                        id={parent.link}
+                        name={parent.link}
+                        action
+                        key={parent.link}
+                        onClick={handleClick.bind(this)}
+                        onMouseEnter={() => setCollpased(true)}
+                        onMouseLeave={() => setCollpased(false)}
+                        href={parent.link}
+                        className={"introduction-button"}
+                    >
+                        {parent.korTitle}
+                    </ListGroup.Item>
+                    {(collpased || clicked === parent.link || children.find(child => child.link == clicked)) ? children.map(child => (<ListGroup.Item
+                        id={child.link}
+                        name={child.link}
+                        action
+                        key={child.link}
+                        onClick={handleClick.bind(this)}
+                        onMouseEnter={() => setCollpased(true)}
+                        onMouseLeave={() => setCollpased(false)}
+                        href={child.link}
+                        className={"introduction-sub-button"}
+                    >
+                        {child.korTitle}
+                    </ListGroup.Item>)) : null}
+                </>
+            )
+        } else {
+            return (
+                <ListGroup.Item
+                    id={parent.link}
+                    name={parent.link}
+                    action
+                    key={parent.link}
+                    onClick={handleClick.bind(this)}
+                    href={parent.link}
+                    className={"introduction-button"}
+                >
+                    {parent.korTitle}
+                </ListGroup.Item>
+            )
+        }
+    }
 
     const listConvert = useCallback(() => {
-        const introList = [];
+        const parents = [];
+
         for (let i = 0; i < intros.intros.length; i++) {
             if (!intros.intros[i].parentId) {
                 if (intros.intros.filter(intro => intro.parentId === intros.intros[i].id).length > 0) {
                     intros.intros[i].isParent = true;
-                    introList.push(intros.intros[i]);
+                    intros.intros[i].childrenList = []
+                    intros.intros[i].link = `#${intros.intros[i].id}`;
                     const subList = intros.intros.filter(intro => intro.parentId === intros.intros[i].id);
                     for (let j = 0; j < subList.length; j++) {
                         subList[j].isParent = false;
                         subList[j].subId = j + 1;
-                        introList.push(subList[j]);
+                        subList[j].childrenList = [];
+                        subList[j].link = `#${intros.intros[i].id}_${subList[j].subId}`;
+                        intros.intros[i].childrenList.push(subList[j]);
                     }
+                    parents.push(intros.intros[i]);
                 } else {
                     intros.intros[i].isParent = false;
-                    introList.push(intros.intros[i]);
+                    intros.intros[i].childrenList = [];
+                    intros.intros[i].link = `#${intros.intros[i].id}`;
+                    parents.push(intros.intros[i]);
                 }
             }
         }
-        setListData2(introList.map(intro => ({
-            link: !intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`,
-            title: intro.korTitle,
-            isSubTab: !!intro.parentId
-        })));
-        setListData1(introList.filter(intro => !intro.parentId).map(intro => ({
-            link: !intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`,
-            title: intro.korTitle,
-            isSubTab: !!intro.parentId
-        })));
-        setTabList(listData2);
+        setParentList(parents);
     }, [intros]);
 
     useEffect(() => {
         listConvert();
     }, [intros, listConvert]);
 
-    const handleClick = event => {
-        const parent = event.target.isParent;
-        if (parent) {
-            setTabList(listData2);
-            setSubTabs(true);
-        } else {
-            setTabList(listData);
-            setSubTabs(false);
-        }
-    };
-    const handleMouseEnter = event => {
-        const parent = event.target.isParent;
-        if (parent) {
-            setTabList(listData2);
-        }
-    };
-    const handleMouseLeave = event => {
-        const parent = event.target.isParent;
-        if (parent && !subTabs) {
-            setTabList(listData);
-        }
-    };
     return (
         <ListGroup>
-            {tabList.map(tab => (
-                <ListGroup.Item
-                    active={tab.active}
-                    id={tab.link}
-                    name={tab.link}
-                    action
-                    key={tab.link}
-                    onClick={handleClick.bind(this)}
-                    onMouseEnter={handleMouseEnter.bind(this)}
-                    onMouseLeave={handleMouseLeave.bind(this)}
-                    href={tab.link}
-                    className={
-                        !tab.isSubTab ? "introduction-button" : "introduction-sub-button"
-                    }
-                >
-                    {tab.title}
-                </ListGroup.Item>
+            {parentList.map((parent, index) => (
+                <ParentTab parent={parent} children={parent.childrenList} key={index} />
             ))}
         </ListGroup>
     );

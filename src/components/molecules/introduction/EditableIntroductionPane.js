@@ -21,8 +21,8 @@ const EditableIntroductionPane = (intros, history) => {
 
     return (
         <Tab.Content>
-            {intros.intros ? intros.intros.map(intro =>
-                <Tab.Pane eventKey={!intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`}>
+            {intros.intros ? intros.intros.map((intro, index) =>
+                <Tab.Pane eventKey={!intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`} key={index}>
                     {auth === "admin" ? (
                         <div className="d-flex justify-content-start py-3">
                             <Button
