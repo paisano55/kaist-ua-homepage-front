@@ -1,15 +1,20 @@
 import React from "react";
 
+import { withRouter } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import { default as EditableIntroductionList } from "../molecules/introduction/EditableIntroductionList";
 import { default as EditableIntroductionPane } from "../molecules/introduction/EditableIntroductionPane";
 import { Row, Col, Tab, Container, Button } from "react-bootstrap";
-
-import { useSelector } from "react-redux";
+import { isEmpty } from "lodash";
 
 import "./IntroductionContent.scss";
+import { Loading } from "../atoms";
+
 
 const EditableIntroductionContent = ({ intros }) => {
     const { auth } = useSelector(state => state.auth);
+    if (isEmpty(intros)) return <Loading />;
 
     return (
         <Container className="flex-grow-1 introduction-content">
@@ -25,24 +30,15 @@ const EditableIntroductionContent = ({ intros }) => {
                 </Row>
             </Tab.Container>
             {auth === "admin" ? (
-                <Button
-                    variant="outline-primary"
-                    className="h-100 d-inline-block"
-                    href="/web/admin/edit/introduction"
-                >
-                    대항목 추가
-                </Button>
-            ) : (
-                <div />
-            )}
-            {auth === "admin" ? (
-                <Button
-                    variant="outline-primary"
-                    className="h-100 d-inline-block"
-                    href="/web/admin/edit/introduction"
-                >
-                    소항목 추가
-                </Button>
+                <div className="d-flex justify-content-start py-3">
+                    <Button
+                        variant="outline-primary"
+                        className="mr-3"
+                        href="/web/admin/edit/introduction"
+                    >
+                        항목 추가
+                    </Button>
+                </div>
             ) : (
                 <div />
             )}
@@ -50,4 +46,4 @@ const EditableIntroductionContent = ({ intros }) => {
     );
 };
 
-export default EditableIntroductionContent;
+export default withRouter(EditableIntroductionContent);

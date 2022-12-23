@@ -5,24 +5,39 @@ import { ListGroup } from "react-bootstrap";
 const EditableIntroductionList = (intros) => {
     const [listData2, setListData2] = useState([]);
     const [listData, setListData1] = useState([]);
-    const [tabList, setTabList] = useState(listData);
-    const [subTabs, setSubTabs] = useState(false);
+    const [tabList, setTabList] = useState([]);
+    const [subTabs, setSubTabs] = useState(true);
 
     const listConvert = useCallback(() => {
-        setListData2(intros.intros? intros.intros.map(intro => ({
+        const introList = [];
+        for (let i = 0; i < intros.intros.length; i++) {
+            if (!intros.intros[i].parentId) {
+                if (intros.intros.filter(intro => intro.parentId === intros.intros[i].id).length > 0) {
+                    intros.intros[i].isParent = true;
+                    introList.push(intros.intros[i]);
+                    const subList = intros.intros.filter(intro => intro.parentId === intros.intros[i].id);
+                    for (let j = 0; j < subList.length; j++) {
+                        subList[j].isParent = false;
+                        subList[j].subId = j + 1;
+                        introList.push(subList[j]);
+                    }
+                } else {
+                    intros.intros[i].isParent = false;
+                    introList.push(intros.intros[i]);
+                }
+            }
+        }
+        setListData2(introList.map(intro => ({
             link: !intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`,
             title: intro.korTitle,
-            isSubTab: !!intro.subId,
-            isParent: false
-        })) : [
-            {
-                link: "#1",
-                title: "Load",
-                isSubTab: false
-            }
-        ]);
-        setListData1(listData2.filter(intro => !intro.isSubTab));
-        setTabList(listData);
+            isSubTab: !!intro.parentId
+        })));
+        setListData1(introList.filter(intro => !intro.parentId).map(intro => ({
+            link: !intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`,
+            title: intro.korTitle,
+            isSubTab: !!intro.parentId
+        })));
+        setTabList(listData2);
     }, [intros]);
 
     useEffect(() => {
@@ -60,15 +75,13 @@ const EditableIntroductionList = (intros) => {
                     name={tab.link}
                     action
                     key={tab.link}
-                    /* onClick={handleClick.bind(this)}
+                    onClick={handleClick.bind(this)}
                     onMouseEnter={handleMouseEnter.bind(this)}
-                    onMouseLeave={handleMouseLeave.bind(this)} */
+                    onMouseLeave={handleMouseLeave.bind(this)}
                     href={tab.link}
                     className={
                         !tab.isSubTab ? "introduction-button" : "introduction-sub-button"
                     }
-                    subTab={tab.isSubTab}
-                    parent={tab.isParent}
                 >
                     {tab.title}
                 </ListGroup.Item>

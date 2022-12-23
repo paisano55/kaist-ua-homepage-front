@@ -9,7 +9,8 @@ import "./EditorContent.scss";
 const IntroEditorContent = ({ onChangeField, onWrite, onCancel, initialContent }) => {
     return (
         <Container className="flex-grow-1 board-content">
-            <IntroEditorHeader onChangeField={onChangeField} />
+            {initialContent ? <h2> 총학 소개 편집 </h2> : <h2> 총학 소개 추가 </h2>}
+            <IntroEditorHeader onChangeField={onChangeField} isEdit={!!initialContent} />
             <Editor
                 onChangeField={onChangeField}
                 placeholder="한글 내용을 작성하세요..."

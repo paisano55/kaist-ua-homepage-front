@@ -22,7 +22,7 @@ const IntroEditorContentContainer = ({ history, id }) => {
         introsAPI
             .write(intro)
             .then(res => {
-                history.push(`/web/intro/${id}`);
+                history.push(`/web/introduction/`);
             })
             .catch(err => console.log(err));
     };
@@ -31,7 +31,7 @@ const IntroEditorContentContainer = ({ history, id }) => {
         introsAPI
             .update(id, intro)
             .then(res => {
-                history.push(`/web/intro/${id}`);
+                history.push(`/web/introduction/${id}`);
             })
             .catch(err => console.log(err));
     };

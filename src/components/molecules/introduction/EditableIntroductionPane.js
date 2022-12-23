@@ -1,19 +1,51 @@
 import React from "react";
 
 import { useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Tab, Button } from "react-bootstrap";
+import * as IntroAPI from "../../../lib/api/intro";
 
-const EditableIntroductionPane = (intros) => {
+const EditableIntroductionPane = (intros, history) => {
     const { auth } = useSelector(state => state.auth);
+
+    const onEdit = (id) => {
+        history.push(`/web/admin/edit/introduction/${id}/`)
+    };
+
+    const onRemove = (id) => {
+        IntroAPI
+            .remove(id)
+            .then(res => history.push(`/web/introduction`))
+            .catch(err => console.log(err));
+    };
 
     return (
         <Tab.Content>
             {intros.intros ? intros.intros.map(intro =>
                 <Tab.Pane eventKey={!intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`}>
+                    {auth === "admin" ? (
+                        <div className="d-flex justify-content-start py-3">
+                            <Button
+                                variant="outline-primary"
+                                className="mr-3"
+                                onClick={() => onEdit(intro.id)}
+                            >
+                                수정
+                            </Button>
+                            <Button
+                                variant="outline-primary"
+                                onClick={() => onRemove(intro.id)}
+                            >
+                                삭제
+                            </Button>
+                        </div>
+                    ) : (
+                        <div />
+                    )}
                     <div dangerouslySetInnerHTML={{ __html: intro.korContent }}></div>
                 </Tab.Pane>)
                 : null}
         </Tab.Content>
     );
 };
-export default EditableIntroductionPane;
+export default withRouter(EditableIntroductionPane);
