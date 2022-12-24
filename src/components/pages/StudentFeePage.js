@@ -34,10 +34,14 @@ const StudentFeePage = () => {
 
   const { t } = useTranslation(["StudentFeePage", "Label"]);
 
-  const paymentDeadline = new Date(2020, 9, 19);
-  const beforePaymentDeadline = new Date() <= paymentDeadline;
-  const paymentDate = new Date(2020, 11, 10);
+  const [paymentDeadline, setPaymentDeadline] = useState(new Date(2020, 9, 19));
+  const [paymentDate, setPaymentDate] = useState(new Date(2020, 11, 10));
   const today = new Date();
+
+  const beforePaymentDeadline = () => {
+    return today <= paymentDeadline;
+  }
+
   const handleModalCloseAndRefresh = () => {
     handleModalOpen("");
     window.location.reload(false);
@@ -50,7 +54,7 @@ const StudentFeePage = () => {
 
   // const handleClose = () => setShow(false);
   const handleShow = () => {
-    if (!beforePaymentDeadline) {
+    if (!beforePaymentDeadline()) {
       alert(t("납부 기간이 지났습니다."));
       return;
     }
@@ -72,6 +76,11 @@ const StudentFeePage = () => {
       if (cancelRequest.length > 0) setCancelPayment(true);
       else setCancelPayment(false);
     });
+    cancelRequestAPI.deadline(
+      today.getFullYear(),
+      today.getMonth() > 8 ? 'fall' : 'spring').then(res => {
+        setPaymentDeadline(new Date(res.data.deadline));
+      });
   }, []);
 
   const handleSubmit = (year, semester) => {
@@ -114,7 +123,7 @@ const StudentFeePage = () => {
       />
       <Modal show={show} onHide={handleSubmit}>
         <Modal.Header closeButton>
-          <Modal.Title>{t("2020년도 가을학기 학생회비 납부")}</Modal.Title>
+          <Modal.Title>{today.getFullYear()}{t("년")} {today.getMonth() > 8 ? t("가을") : t("봄")}{t("학기")} {t("학생회비 납부")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="d-flex justify-content-between align-items-center">
@@ -193,7 +202,7 @@ const StudentFeePage = () => {
         </Row>
         <div className="divider" />
         {
-          !beforePaymentDeadline ?
+          beforePaymentDeadline() ?
             <>
               <Row className="d-flex align-items-center payment-row">
                 <Col lg={7}>
@@ -202,25 +211,14 @@ const StudentFeePage = () => {
                     {t("년")} {today.getMonth() > 8 ? t("가을") : t("봄")}
                     {t("학기")}
                   </span>
-                  {beforePaymentDeadline ? (
-                    <span
-                      style={{ fontSize: "10pt", color: "#0a0", paddingLeft: "10px" }}
-                    >
-                      {t("Label:label", {
-                        kor: paymentDeadline.toLocaleDateString() + "까지 변경 가능",
-                        eng: "Changes accepted until " + paymentDeadline.toLocaleDateString()
-                      })}
-                    </span>
-                  ) : (
-                    <span
-                      style={{ fontSize: "10pt", color: "#a00", paddingLeft: "10px" }}
-                    >
-                      {t("Label:label", {
-                        kor: "변경 기간이 지났습니다.",
-                        eng: "The payment decision period has ended."
-                      })}
-                    </span>
-                  )}
+                  <span
+                    style={{ fontSize: "10pt", color: "#0a0", paddingLeft: "10px" }}
+                  >
+                    {t("Label:label", {
+                      kor: paymentDeadline.toLocaleDateString() + "까지 변경 가능",
+                      eng: "Changes accepted until " + paymentDeadline.toLocaleDateString()
+                    })}
+                  </span>
                 </Col>
                 {cancelPayment ? (
                   <Col lg={3} className="d-flex" style={{ color: "#888" }}>
