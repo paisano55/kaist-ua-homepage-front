@@ -1,11 +1,13 @@
 import React from "react";
 
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
 import { Tab, Button } from "react-bootstrap";
 import * as IntroAPI from "../../../lib/api/intro";
 
-const EditableIntroductionPane = ({ intros, history, location }) => {
+const EditableIntroductionPane = ({ intros, history }) => {
+    const { t } = useTranslation(["Introduction"]);
     const { auth } = useSelector(state => state.auth);
 
     const onEdit = (id) => {
@@ -43,10 +45,10 @@ const EditableIntroductionPane = ({ intros, history, location }) => {
                     ) : (
                         <div />
                     )}
-                    <div dangerouslySetInnerHTML={{ __html: intro.korContent }}></div>
+                    <div dangerouslySetInnerHTML={{ __html: t("content", { intro: intro }) }}></div>
                 </Tab.Pane>)
                 : null}
-        </Tab.Content>
+        </Tab.Content >
     );
 };
 export default withRouter(EditableIntroductionPane);

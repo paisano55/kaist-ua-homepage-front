@@ -43,5 +43,9 @@
     "content": "{{content.korContent}}",
     "views": "조회수 {{views}}",
     "votes": "{{votes}}명 참여 중"
+  },
+  "Introduction": {
+    "title": "{{intro.korTitle}}",
+    "content": "{{intro.korContent}}"
   }
 }

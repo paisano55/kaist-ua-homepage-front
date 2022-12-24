@@ -45,6 +45,10 @@
     "votes": "{{votes}} vote(s)",
     "공지사항": "Announcements"
   },
+  "Introduction": {
+    "title": "{{intro.engTitle}}",
+    "content": "{{intro.engContent}}"
+  },
   "SeeMore": {
     "더보기": "Expand"
   },

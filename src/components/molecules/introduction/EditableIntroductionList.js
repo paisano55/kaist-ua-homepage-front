@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-
+import { useTranslation } from "react-i18next";
 import { ListGroup } from "react-bootstrap";
 
 const EditableIntroductionList = ({ intros }) => {
+    const { t } = useTranslation(["Introduction"]);
     const [parentList, setParentList] = useState([]);
     const [clicked, setClicked] = useState();
 
@@ -28,7 +29,7 @@ const EditableIntroductionList = ({ intros }) => {
                         href={parent.link}
                         className={"introduction-button"}
                     >
-                        {parent.korTitle}
+                        {t("title", { intro: parent })}
                     </ListGroup.Item>
                     {(collpased || clicked === parent.link || children.find(child => child.link === clicked)) ? children.map(child => (<ListGroup.Item
                         id={child.link}
@@ -41,7 +42,7 @@ const EditableIntroductionList = ({ intros }) => {
                         href={child.link}
                         className={"introduction-sub-button"}
                     >
-                        {child.korTitle}
+                        {t("title", { intro: child })}
                     </ListGroup.Item>)) : null}
                 </>
             )
@@ -56,7 +57,7 @@ const EditableIntroductionList = ({ intros }) => {
                     href={parent.link}
                     className={"introduction-button"}
                 >
-                    {parent.korTitle}
+                    {t("title", { intro: parent })}
                 </ListGroup.Item>
             )
         }
