@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import { Tab, Button } from "react-bootstrap";
 import * as IntroAPI from "../../../lib/api/intro";
 
-const EditableIntroductionPane = (intros, history) => {
+const EditableIntroductionPane = ({ intros, history, location }) => {
     const { auth } = useSelector(state => state.auth);
 
     const onEdit = (id) => {
@@ -17,11 +17,12 @@ const EditableIntroductionPane = (intros, history) => {
             .remove(id)
             .then(res => history.push(`/web/introduction`))
             .catch(err => console.log(err));
+        window.location.reload();
     };
 
     return (
         <Tab.Content>
-            {intros.intros ? intros.intros.map((intro, index) =>
+            {intros ? intros.map((intro, index) =>
                 <Tab.Pane eventKey={!intro.subId ? `#${intro.id}` : `#${intro.parentId}_${intro.subId}`} key={index}>
                     {auth === "admin" ? (
                         <div className="d-flex justify-content-start py-3">

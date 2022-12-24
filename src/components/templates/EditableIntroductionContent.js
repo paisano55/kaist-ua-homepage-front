@@ -19,7 +19,7 @@ const EditableIntroductionContent = ({ intros }) => {
     return (
         <Container className="flex-grow-1 introduction-content">
             <div className="introduction-header-title">총학 소개 </div>
-            <Tab.Container defaultActiveKey="#1">
+            <Tab.Container defaultActiveKey={`#${intros[0].id}`}>
                 <Row>
                     <Col sm={5} md={4} lg={3} style={{ paddingBottom: "15px" }}>
                         <EditableIntroductionList intros={intros} />

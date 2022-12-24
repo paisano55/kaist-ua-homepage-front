@@ -1,21 +1,18 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import EditableIntroductionContent from "../../templates/EditableIntroductionContent"
 import * as introAPI from "../../../lib/api/intro"
-import { listIntros } from "../../../modules/intros";
 
 const EditableIntroductionContentContainer = () => {
   const dispatch = useDispatch();
-  const { intros } = useSelector(({ intros }) => ({
-    intros: intros.intros
-  }));
+  const [intros, setIntros] = useState([]);
 
   const getIntrosList = useCallback(() => {
     introAPI
       .list()
       .then(res => {
-        dispatch(listIntros(res.data));
+        setIntros(res.data.intros);
       })
       .catch(err => console.log(err));
   }, [dispatch]);

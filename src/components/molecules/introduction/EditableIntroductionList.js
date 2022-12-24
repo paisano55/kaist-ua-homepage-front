@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 
 import { ListGroup } from "react-bootstrap";
 
-const EditableIntroductionList = (intros) => {
+const EditableIntroductionList = ({ intros }) => {
     const [parentList, setParentList] = useState([]);
     const [clicked, setClicked] = useState();
 
@@ -30,7 +30,7 @@ const EditableIntroductionList = (intros) => {
                     >
                         {parent.korTitle}
                     </ListGroup.Item>
-                    {(collpased || clicked === parent.link || children.find(child => child.link == clicked)) ? children.map(child => (<ListGroup.Item
+                    {(collpased || clicked === parent.link || children.find(child => child.link === clicked)) ? children.map(child => (<ListGroup.Item
                         id={child.link}
                         name={child.link}
                         action
@@ -65,26 +65,26 @@ const EditableIntroductionList = (intros) => {
     const listConvert = useCallback(() => {
         const parents = [];
 
-        for (let i = 0; i < intros.intros.length; i++) {
-            if (!intros.intros[i].parentId) {
-                if (intros.intros.filter(intro => intro.parentId === intros.intros[i].id).length > 0) {
-                    intros.intros[i].isParent = true;
-                    intros.intros[i].childrenList = []
-                    intros.intros[i].link = `#${intros.intros[i].id}`;
-                    const subList = intros.intros.filter(intro => intro.parentId === intros.intros[i].id);
+        for (let i = 0; i < intros.length; i++) {
+            if (!intros[i].parentId) {
+                if (intros.filter(intro => intro.parentId === intros[i].id).length > 0) {
+                    intros[i].isParent = true;
+                    intros[i].childrenList = []
+                    intros[i].link = `#${intros[i].id}`;
+                    const subList = intros.filter(intro => intro.parentId === intros[i].id);
                     for (let j = 0; j < subList.length; j++) {
                         subList[j].isParent = false;
                         subList[j].subId = j + 1;
                         subList[j].childrenList = [];
-                        subList[j].link = `#${intros.intros[i].id}_${subList[j].subId}`;
-                        intros.intros[i].childrenList.push(subList[j]);
+                        subList[j].link = `#${intros[i].id}_${subList[j].subId}`;
+                        intros[i].childrenList.push(subList[j]);
                     }
-                    parents.push(intros.intros[i]);
+                    parents.push(intros[i]);
                 } else {
-                    intros.intros[i].isParent = false;
-                    intros.intros[i].childrenList = [];
-                    intros.intros[i].link = `#${intros.intros[i].id}`;
-                    parents.push(intros.intros[i]);
+                    intros[i].isParent = false;
+                    intros[i].childrenList = [];
+                    intros[i].link = `#${intros[i].id}`;
+                    parents.push(intros[i]);
                 }
             }
         }

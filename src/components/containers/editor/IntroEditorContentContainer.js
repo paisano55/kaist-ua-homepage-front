@@ -31,7 +31,7 @@ const IntroEditorContentContainer = ({ history, id }) => {
         introsAPI
             .update(id, intro)
             .then(res => {
-                history.push(`/web/introduction/${id}`);
+                history.push(`/web/introduction/`);
             })
             .catch(err => console.log(err));
     };
