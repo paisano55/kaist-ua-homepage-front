@@ -7,6 +7,7 @@ import { BoardHeader } from "../molecules";
 
 import * as paymentAPI from "../../lib/api/payment";
 import * as bannerAPI from "../../lib/api/banner";
+import * as adminsAPI from "../../lib/api/admin";
 
 
 // Site Management page for admin
@@ -16,6 +17,9 @@ const AdminPage = () => {
   const [fileName, setFileName] = useState(null);
   const [youtubeLink, setYoutubeLink] = useState(null);
   const [mainBannerList, setMainBannerList] = useState(null);
+  const [newEmail, setEmail] = useState("");
+  const [newPassword, setPassword] = useState("");
+  const [adminKey, setAdminKey] = useState("");
 
   const [showUploadConfirmModal, setShowUploadConfirmModal] = useState(false);
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
@@ -104,13 +108,21 @@ const AdminPage = () => {
       .catch(err => handleUploadModalOpen("fail"));
   };
 
+  const addAdmin = e => {
+    e.preventDefault();
+    adminsAPI
+      .register({ newEmail, newPassword, adminKey })
+      .then(res => {
+        handleUploadModalOpen("success");
+      })
+      .catch(err => handleUploadModalOpen("fail"));
+  };
+
   return (
     <div
       style={{ minHeight: "100vh", fontFamily: "NanumSquare" }}
       className="d-flex flex-column"
     >
-
-
 
       <CustomModal
         title={`학생회비 납부 기록`}
@@ -215,6 +227,36 @@ const AdminPage = () => {
               등록
             </Button>
           </Form.Group>
+        </Form>
+      </Container>
+      <Container className="flex-grow-1 p-3">
+        <BoardHeader title="어드민 계정 관리" />
+        <Form className="login-form" onSubmit={addAdmin}>
+          <Form.Label>어드민 계정 추가</Form.Label>
+          <Form.Group>
+            <Form.Label>이메일</Form.Label>
+            <Form.Control
+              type="email"
+              onChange={value => setEmail(value.target.value)}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>비밀번호</Form.Label>
+            <Form.Control
+              type="text"
+              onChange={value => setPassword(value.target.value)}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>어드민 생성 키</Form.Label>
+            <Form.Control
+              type="text"
+              onChange={value => setAdminKey(value.target.value)}
+            />
+          </Form.Group>
+          <Button type="submit">
+            계정 추가
+          </Button>
         </Form>
       </Container>
       <Footer />
