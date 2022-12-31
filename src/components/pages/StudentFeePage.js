@@ -77,13 +77,12 @@ const StudentFeePage = () => {
       if (cancelRequest.length > 0) setCancelPayment(true);
       else setCancelPayment(false);
     });
-    const dl = deadlineAPI.get().then(res => {
-      res.data.find(deadline => deadline.year === today.getFullYear() && deadline.semester === (today.getMonth() > 8 ? 'fall' : 'spring')).due;
+    deadlineAPI.get().then(res => {
+      return res.data.find(deadlines => deadlines.year === today.getFullYear() && deadlines.semester === (today.getMonth() > 8 ? 'fall' : 'spring'));
     }).then(deadline => {
-      setPaymentDeadline(new Date(deadline));
-    }).catch(err => {
-      console.warn(err);
-    });
+      console.log(deadline);
+      setPaymentDeadline(new Date(deadline.due));
+    })
   }, []);
 
   const handleSubmit = (year, semester) => {

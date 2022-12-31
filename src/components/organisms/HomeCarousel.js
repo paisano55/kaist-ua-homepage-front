@@ -10,12 +10,15 @@ const HomeCarousel = props => {
   useEffect(() => {
     bannersAPI.list().then(res => {
       setBanners(res.data);
+      console.log(res.data);
     });
   }, []);
 
   const CarouselItemList = banners.length
     ? banners.map((banner) => {
       if (!banner.isActive)
+        return null;
+      if (!banner.image)
         return null;
       return banner.image.startsWith(process.env.REACT_APP_BANNER_URL) ? (
         <CarouselItem key={banner.id} src={banner.image} href={banner.link} />
