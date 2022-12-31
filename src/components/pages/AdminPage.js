@@ -5,10 +5,12 @@ import { Header, Footer, CustomModal } from "../organisms";
 import { withRouter } from "react-router-dom";
 import { BoardHeader } from "../molecules";
 import DatePicker from "react-datepicker";
+import { CSVLink } from "react-csv";
 
 import * as paymentAPI from "../../lib/api/payment";
 import * as bannerAPI from "../../lib/api/banner";
 import * as adminsAPI from "../../lib/api/admin";
+import * as deadlineAPI from "../../lib/api/deadlines";
 
 
 // Site Management page for admin
@@ -30,6 +32,7 @@ const AdminPage = () => {
   const [deadlineYear, setDeadlineYear] = useState(2023);
   const [deadlineSemester, setDeadlineSemester] = useState("spring");
   const [studentFeeDeadline, setStudentFeeDeadline] = useState(new Date());
+  const [studentFeeList, setStudentFeeList] = useState([]);
 
   const [showUploadConfirmModal, setShowUploadConfirmModal] = useState(false);
   const [showUploadSuccessModal, setShowUploadSuccessModal] = useState(false);
@@ -87,7 +90,11 @@ const AdminPage = () => {
         <Form.Control
           type="text"
           value={banner.image}
-          onChange={e => setBannerList(bannerList.map((item, i) => i === index ? { ...item, src: e.target.value } : item))}
+          onChange={e => {
+            let newBanner = bannerList.find((item, i) => i === index);
+            newBanner.image = e.target.value;
+            setBannerList(bannerList.map((item, i) => i === index ? newBanner : item));
+          }}
           label={"새 배너 이미지"}
         />
       </Col>
@@ -95,17 +102,26 @@ const AdminPage = () => {
         <Form.Control
           type="text"
           value={banner.link}
-          onChange={e => setBannerList(bannerList.map((item, i) => i === index ? { ...item, href: e.target.value } : item))}
+          onChange={e => {
+            let newBanner = bannerList.find((item, i) => i === index);
+            newBanner.link = e.target.value;
+            setBannerList(bannerList.map((item, i) => i === index ? newBanner : item));
+          }}
           label={"새 배너 링크 대상"}
         />
       </Col>
       <Col>
-        <Form.Check
-          type="switch"
-          value={banner.isActive}
-          onChange={e => setBannerList(bannerList.map((item, i) => i === index ? { ...item, isActive: e.target.checked } : item))}
-          label={"메인에 보이기"}
-        />
+        <Form.Check type={"checkbox"}>
+          <Form.Check.Input
+            type={"checkbox"}
+            checked={banner.isActive}
+            onChange={e => {
+              let newBanner = bannerList.find((item, i) => i === index);
+              newBanner.isActive = e.target.checked;
+              setBannerList(bannerList.map((item, i) => i === index ? newBanner : item));
+            }} />
+          <Form.Check.Label>메인에 보이기</Form.Check.Label>
+        </Form.Check>
       </Col>
       <Col>
         <Button variant="danger" onClick={e => deleteBanner(index)}>X</Button>
@@ -128,9 +144,7 @@ const AdminPage = () => {
     bannerAPI.list().then(res => {
       const ytBanner = res.data.filter(banner => banner.image === "Youtube Livestream (EMBED)");
       if (ytBanner.length) {
-        bannerAPI.update(ytBanner[0].id, { image: "Youtube Livestream (EMBED)", link: youtubeLink, isActive: youtubeBannerActive }).then(res => {
-          console.log(res);
-        });
+        bannerAPI.update(ytBanner[0].id, { image: "Youtube Livestream (EMBED)", link: youtubeLink, isActive: youtubeBannerActive });
       } else {
         bannerAPI.create({ image: "Youtube Livestream (EMBED)", link: youtubeLink, isActive: youtubeBannerActive });
         console.log("NO BANNER!", youtubeLink, youtubeBannerActive);
@@ -157,24 +171,11 @@ const AdminPage = () => {
     handleYoutubeToggle();
   }, [youtubeBannerActive]);
 
-
-  const getStudentFeePayerList = ({ year, semester }) => {
-    /*
-    TODO : Export Excel/CSV from API response
-    paymentAPI.getAll().then(res => {
-      const studentDataCollection = res.data.map(payment => {
-        return [payment.studentId, payment.paymentDate, payment.amount];
-      });
-   
-    }).catch(err => {
-      console.warn(err);
-    });
-    */
-  }
-
   const submitDeadline = () => {
-    console.log("SUBMIT-DEADLINE WIP");
-    console.log(studentFeeDeadline, deadlineYear, deadlineSemester);
+    alert(" " + deadlineYear + deadlineSemester + studentFeeDeadline);
+    deadlineAPI.add({ year: deadlineYear, semester: deadlineSemester, due: studentFeeDeadline }).then(res => {
+      console.log(res);
+    });
   }
 
   const handlePaymentCSV = () => {
@@ -316,7 +317,23 @@ const AdminPage = () => {
               <option value="spring">봄학기</option>
               <option value="fall">가을학기</option>
             </Form.Control>
-            <Button onClick={getStudentFeePayerList({ year, semester })}>다운로드</Button>
+            <CSVLink
+              data={studentFeeList}
+              asyncOnClick={true}
+              onClick={(event, done) => {
+                paymentAPI.getAll(year, semester).then(res => {
+                  return res.data.map(payment => {
+                    return [payment.studentId, payment.paymentDate, payment.amount];
+                  });
+                }).then(() => { done(); }).catch(err => {
+                  console.warn(err);
+                });
+              }}
+            >
+              <Button variant="outline-primary">
+                내려받기
+              </Button>
+            </CSVLink>
             <Form.Text className="text-muted">
               *제작 시각, IP, 이용자 ID가 기록됩니다.
             </Form.Text>
@@ -351,7 +368,7 @@ const AdminPage = () => {
       </Container>
       <Container className="flex-grow-1 p-3">
         <BoardHeader title="학생회비 납부기한" />
-        <form onSubmit={submitDeadline()}>
+        <form onSubmit={() => submitDeadline()}>
           <Form.Group>
             <Form.Label>
               연도 입력 (예: 2020년도 1학기의 경우 2020)
@@ -372,7 +389,7 @@ const AdminPage = () => {
 
             <Form.Label>납부기한</Form.Label>
             <DatePicker selected={studentFeeDeadline} onChange={date => setStudentFeeDeadline(date)} />
-
+            <Button type="submit">저장</Button>
           </Form.Group>
         </form>
       </Container>

@@ -82,7 +82,9 @@ const StudentFeePage = () => {
     }).then(deadline => {
       console.log(deadline);
       setPaymentDeadline(new Date(deadline.due));
-    })
+    }).catch(err => {
+      console.log(err);
+    });
   }, []);
 
   const handleSubmit = (year, semester) => {

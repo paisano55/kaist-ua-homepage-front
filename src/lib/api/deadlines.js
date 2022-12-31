@@ -11,4 +11,4 @@ export const get = () =>
 
 
 export const add = ({ year, semester, due }) =>
-    deadlines.post("", { year, semester, due });
+    deadlines.post("", { params: { year, semester, due } });
