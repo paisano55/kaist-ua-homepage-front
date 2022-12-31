@@ -228,7 +228,7 @@ const StudentFeePage = () => {
                   <Col lg={3} className="d-flex">
                     {t("Label:label", {
                       kor: paymentDate.toLocaleDateString() + " 납부 예정",
-                      eng: "Will be charged on " + paymentDate.toLocaleDateString()
+                      eng: "Estimated payment date : " + paymentDate.toLocaleDateString()
                     })}
                   </Col>
                 )}
