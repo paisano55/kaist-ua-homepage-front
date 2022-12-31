@@ -71,9 +71,29 @@ const AdminPage = () => {
   };
 
   const submitBanner = (e) => {
-    /* get all banners */
-    /* if banner with id exists, update it */
-    /* if banner with id does not exist, create it */
+    bannerAPI.list().then(res => {
+      res.data.map((banner, index) => {
+        if (!bannerList.some(item => item.id === banner.id)) {
+          bannerAPI.remove(banner.id).then(res => {
+            console.log("REM: " + res);
+          });
+        }
+      })
+    });
+    bannerList.map((banner, index) => {
+      if (banner.image === "" || banner.link === "") {
+        deleteBanner(index);
+      }
+      if ("id" in banner) {
+        bannerAPI.update(banner.id, banner).then(res => {
+          console.log("UPD: " + res);
+        });
+      } else {
+        bannerAPI.create(banner).then(res => {
+          console.log(res);
+        });
+      }
+    });
   }
   const deleteBanner = (index) =>
     setBannerList(bannerList.filter((item, i) => i !== index));
@@ -85,48 +105,49 @@ const AdminPage = () => {
   }
 
   const renderBannerList = bannerList.map((banner, index) =>
-    <Row key={index + 1}>
-      <Col>
-        <Form.Control
-          type="text"
-          value={banner.image}
-          onChange={e => {
-            let newBanner = bannerList.find((item, i) => i === index);
-            newBanner.image = e.target.value;
-            setBannerList(bannerList.map((item, i) => i === index ? newBanner : item));
-          }}
-          label={"새 배너 이미지"}
-        />
-      </Col>
-      <Col>
-        <Form.Control
-          type="text"
-          value={banner.link}
-          onChange={e => {
-            let newBanner = bannerList.find((item, i) => i === index);
-            newBanner.link = e.target.value;
-            setBannerList(bannerList.map((item, i) => i === index ? newBanner : item));
-          }}
-          label={"새 배너 링크 대상"}
-        />
-      </Col>
-      <Col>
-        <Form.Check type={"checkbox"}>
-          <Form.Check.Input
-            type={"checkbox"}
-            checked={banner.isActive}
+    banner.image === "Youtube Livestream (EMBED)" ? null :
+      <Row key={index + 1}>
+        <Col>
+          <Form.Control
+            type="text"
+            value={banner.image}
             onChange={e => {
               let newBanner = bannerList.find((item, i) => i === index);
-              newBanner.isActive = e.target.checked;
+              newBanner.image = e.target.value;
               setBannerList(bannerList.map((item, i) => i === index ? newBanner : item));
-            }} />
-          <Form.Check.Label>메인에 보이기</Form.Check.Label>
-        </Form.Check>
-      </Col>
-      <Col>
-        <Button variant="danger" onClick={e => deleteBanner(index)}>X</Button>
-      </Col>
-    </Row>
+            }}
+            label={"새 배너 이미지"}
+          />
+        </Col>
+        <Col>
+          <Form.Control
+            type="text"
+            value={banner.link}
+            onChange={e => {
+              let newBanner = bannerList.find((item, i) => i === index);
+              newBanner.link = e.target.value;
+              setBannerList(bannerList.map((item, i) => i === index ? newBanner : item));
+            }}
+            label={"새 배너 링크 대상"}
+          />
+        </Col>
+        <Col>
+          <Form.Check type={"checkbox"}>
+            <Form.Check.Input
+              type={"checkbox"}
+              checked={banner.isActive}
+              onChange={e => {
+                let newBanner = bannerList.find((item, i) => i === index);
+                newBanner.isActive = e.target.checked;
+                setBannerList(bannerList.map((item, i) => i === index ? newBanner : item));
+              }} />
+            <Form.Check.Label>메인에 보이기</Form.Check.Label>
+          </Form.Check>
+        </Col>
+        <Col>
+          <Button variant="danger" onClick={e => deleteBanner(index)}>X</Button>
+        </Col>
+      </Row>
   )
 
   const createYoutubeBanner = () => {
@@ -161,6 +182,7 @@ const AdminPage = () => {
         setYoutubeLink(ytBanner[0].link);
         setYoutubeBannerActive(ytBanner[0].isActive);
       }
+      setBannerList(res.data);
     }).catch(err => {
       console.warn(err);
     });
@@ -342,7 +364,7 @@ const AdminPage = () => {
       </Container>
       <Container className="flex-grow-1 p-3">
         <BoardHeader title="이미지 배너 관리" />
-        <form onSubmit={submitBanner}>
+        <form>
           <Form.Group>
             <Form.Label>메인 페이지 배너 목록</Form.Label>
             <Container>
@@ -360,7 +382,7 @@ const AdminPage = () => {
               {renderBannerList}
               <Row>
                 <Button onClick={addNewBanner}>+</Button>
-                <Button type="submit">저장</Button>
+                <Button type="submit" onClick={submitBanner}>저장</Button>
               </Row>
             </Container>
           </Form.Group>
