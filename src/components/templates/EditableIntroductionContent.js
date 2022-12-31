@@ -12,20 +12,20 @@ import "./IntroductionContent.scss";
 import { Loading } from "../atoms";
 
 
-const EditableIntroductionContent = ({ intros }) => {
+const EditableIntroductionContent = ({ intros, desc, onEdit, onRemove, onWrite }) => {
     const { auth } = useSelector(state => state.auth);
     if (isEmpty(intros)) return <Loading />;
 
     return (
         <Container className="flex-grow-1 introduction-content">
-            <div className="introduction-header-title">총학 소개 </div>
+            <div className="introduction-header-title">{desc}</div>
             <Tab.Container defaultActiveKey={`#${intros[0].id}`}>
                 <Row>
                     <Col sm={5} md={4} lg={3} style={{ paddingBottom: "15px" }}>
                         <EditableIntroductionList intros={intros} />
                     </Col>
                     <Col>
-                        <EditableIntroductionPane intros={intros} />
+                        <EditableIntroductionPane intros={intros} onEdit={onEdit} onRemove={onRemove} />
                     </Col>
                 </Row>
             </Tab.Container>
@@ -34,7 +34,7 @@ const EditableIntroductionContent = ({ intros }) => {
                     <Button
                         variant="outline-primary"
                         className="mr-3"
-                        href="/web/admin/edit/introduction"
+                        onClick={() => onWrite()}
                     >
                         항목 추가
                     </Button>

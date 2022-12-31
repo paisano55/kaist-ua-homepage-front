@@ -6,21 +6,9 @@ import { withRouter } from "react-router-dom";
 import { Tab, Button } from "react-bootstrap";
 import * as IntroAPI from "../../../lib/api/intro";
 
-const EditableIntroductionPane = ({ intros, history }) => {
+const EditableIntroductionPane = ({ intros, history, onEdit, onRemove }) => {
     const { t } = useTranslation(["Introduction"]);
     const { auth } = useSelector(state => state.auth);
-
-    const onEdit = (id) => {
-        history.push(`/web/admin/edit/introduction/${id}/`)
-    };
-
-    const onRemove = (id) => {
-        IntroAPI
-            .remove(id)
-            .then(res => history.push(`/web/introduction`))
-            .catch(err => console.log(err));
-        window.location.reload();
-    };
 
     return (
         <Tab.Content>

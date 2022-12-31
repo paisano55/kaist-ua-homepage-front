@@ -21,6 +21,7 @@ const Header = ({ history, ...props }) => {
   const [hover4, setHover4] = useState(<div />);
   const [hover5, setHover5] = useState(<div />);
   const [hover6, setHover6] = useState(<div />);
+  const [hover7, setHover7] = useState(<div />);
   const [authButtonBar, setAuthButtonBar] = useState(<div />);
   const target = useRef(null);
 
@@ -122,6 +123,17 @@ const Header = ({ history, ...props }) => {
             >
               {t("총학 소개")}
               {props.active === "0" ? active : hover1}
+            </Nav.Link>
+            <Nav.Link
+              className="header-item"
+              href="/web/rule"
+              onMouseEnter={() => setHover7(enter)}
+              onMouseLeave={() => {
+                setHover7(leave);
+              }}
+            >
+              {t("학생회칙")}
+              {props.active === "rule" ? active : hover7}
             </Nav.Link>
             <Nav.Link
               ref={target}

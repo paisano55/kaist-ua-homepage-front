@@ -3,17 +3,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { init, setIntro, changeField } from "../../../modules/intro";
 import { IntroEditorContent } from "../../templates";
 import { withRouter } from "react-router-dom";
-import * as introsAPI from "../../../lib/api/intro"
+import * as rulesAPI from "../../../lib/api/rule"
 
-const IntroEditorContentContainer = ({ history, id }) => {
+const RuleEditorContentContainer = ({ history, id }) => {
     const dispatch = useDispatch();
-    const intro = useSelector(({ intro }) => intro);
-    const [intros, setIntros] = useState([]);
+    const rule = useSelector(({ intro }) => intro);
+    const [rules, setRules] = useState([]);
     useEffect(() => {
-        introsAPI
+        rulesAPI
             .list()
             .then(res => {
-                setIntros(res.data);
+                setRules(res.data);
             })
             .catch(err => console.log(err));
     }, []);
@@ -27,27 +27,27 @@ const IntroEditorContentContainer = ({ history, id }) => {
     };
 
     const onWrite = () => {
-        console.log(intro);
-        introsAPI
-            .write(intro)
+        console.log(rule);
+        rulesAPI
+            .write(rule)
             .then(res => {
-                history.push(`/web/introduction/`);
+                history.push(`/web/rule/`);
             })
             .catch(err => console.log(err));
     };
 
     const onEdit = () => {
-        introsAPI
-            .update(id, intro)
+        rulesAPI
+            .update(id, rule)
             .then(res => {
-                history.push(`/web/introduction/`);
+                history.push(`/web/rule/`);
             })
             .catch(err => console.log(err));
     };
 
     useEffect(() => {
         if (id) {
-            introsAPI
+            rulesAPI
                 .read(id)
                 .then(res => {
                     dispatch(setIntro(res.data));
@@ -68,11 +68,11 @@ const IntroEditorContentContainer = ({ history, id }) => {
             onChangeField={onChangeField}
             onWrite={id ? onEdit : onWrite}
             onCancel={onCancel}
-            initialContent={id ? { korContent: intro.korContent, engContent: intro.engContent } : null}
-            intros={intros}
-            description={"총학 소개"}
+            initialContent={id ? { korContent: rule.korContent, engContent: rule.engContent } : null}
+            description={"학생회칙"}
+            intros={rules}
         />
     );
 };
 
-export default withRouter(IntroEditorContentContainer);
+export default withRouter(RuleEditorContentContainer);

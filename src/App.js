@@ -31,6 +31,7 @@ function App() {
     <Switch>
       <Route path="/web/main" component={pages.MainPage} />
       <Route path="/web/introduction" component={pages.EditableIntroductionPage} />
+      <Route path="/web/rule" component={pages.RulePage} />
       <Route path="/web/board/:boardId" component={pages.BoardPage} />
       <Route path="/web/welfare" component={pages.WelfarePage} />
       <Route path="/web/petition/:petitionId" component={pages.PetitionViewPage} />
@@ -45,6 +46,12 @@ function App() {
         exact={true}
       />
       <ProtectedRoute path="/web/admin/edit/introduction/:id" component={pages.IntroEditPage} />
+      <ProtectedRoute
+        path="/web/admin/edit/rule"
+        component={pages.RuleEditPage}
+        exact={true}
+      />
+      <ProtectedRoute path="/web/admin/edit/rule/:id" component={pages.RuleEditPage} />
       <ProtectedRoute
         path="/web/admin/"
         component={pages.AdminPage}
