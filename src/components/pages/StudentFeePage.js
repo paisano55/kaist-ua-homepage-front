@@ -15,6 +15,7 @@ import { BoardHeader } from "../molecules";
 
 import * as paymentAPI from "../../lib/api/payment";
 import * as cancelRequestAPI from "../../lib/api/cancelRequest";
+import * as deadlineAPI from "../../lib/api/deadlines";
 import "./StudentFeePage.scss";
 
 import { useTranslation } from "react-i18next";
@@ -76,11 +77,13 @@ const StudentFeePage = () => {
       if (cancelRequest.length > 0) setCancelPayment(true);
       else setCancelPayment(false);
     });
-    cancelRequestAPI.deadline(
-      today.getFullYear(),
-      today.getMonth() > 8 ? 'fall' : 'spring').then(res => {
-        setPaymentDeadline(new Date(res.data.deadline));
-      });
+    const dl = deadlineAPI.get().then(res => {
+      res.data.find(deadline => deadline.year === today.getFullYear() && deadline.semester === (today.getMonth() > 8 ? 'fall' : 'spring')).due;
+    }).then(deadline => {
+      setPaymentDeadline(new Date(deadline));
+    }).catch(err => {
+      console.warn(err);
+    });
   }, []);
 
   const handleSubmit = (year, semester) => {
@@ -150,9 +153,9 @@ const StudentFeePage = () => {
           <div style={{ color: "#888", fontSize: "10pt", paddingTop: "15px" }}>
             {t("Label:label", {
               kor:
-                "납부를 선택하시면 이번 학기 11월 학자금에서 20,200원이 공제됩니다.",
+                "납부를 선택하시면 이번 학기 학자금에서 20,200원이 1회 공제됩니다.",
               eng:
-                "If you choose Yes, an amount of ₩20,200 will be deducted from this semester's November scholarship."
+                "If you choose Yes, a one-time fee of ₩20,200 will be deducted from this semester's scholarship."
             })}
           </div>
         </Modal.Body>
