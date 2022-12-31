@@ -9,8 +9,6 @@ import { Row, Col, Tab, Container, Button } from "react-bootstrap";
 import { isEmpty } from "lodash";
 
 import "./IntroductionContent.scss";
-import { Loading } from "../atoms";
-
 
 const EditableIntroductionContent = ({ intros, desc, onEdit, onRemove, onWrite }) => {
     const { auth } = useSelector(state => state.auth);
