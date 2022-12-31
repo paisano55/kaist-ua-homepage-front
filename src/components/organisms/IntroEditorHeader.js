@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Container, Form } from "react-bootstrap";
 import { EditorFormGroup } from "../molecules";
-import * as introAPI from "../../lib/api/intro"
 import "./EditorHeader.scss";
 
 const IntroEditorHeader = ({ onChangeField, isEdit, intros }) => {
