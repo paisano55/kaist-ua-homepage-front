@@ -13,6 +13,3 @@ export const getOne = () => cancelRequest.get();
 
 export const remove = ({ year, semester }) =>
   cancelRequest.delete(`/`, { params: { year, semester } });
-
-export const deadline = ({ year, semester }) =>
-  cancelRequest.get(`/deadline`, { params: { year, semester } }); // Get deadline for payment

@@ -57,7 +57,23 @@ const AdminPage = () => {
     reader.readAsText(files[0]);
   };
 
-  const handleYoutubeToggle = (enable) => {
+  const createYoutubeBanner = (streamLink) => {
+    bannerAPI.create({ image: "Youtube Livestream (EMBED)", link: "streamLink", isActive: false }
+    ).catch(err => {
+      console.warn(err);
+    });
+  }
+  const isYoutubeBannerLive = () => {
+    bannerAPI.list().then(res => {
+      const ytBanner = res.data.filter(banner => banner.image === "Youtube Livestream (EMBED)");
+      if (ytBanner.length) {
+        return ytBanner[0].isActive;
+      }
+    }).catch(err => {
+      console.warn(err);
+    });
+  }
+  const handleYoutubeToggle = (streamLink, enable) => {
     /*
     1. Check YT banner exists
     2. If exists, set to {enable}
@@ -65,11 +81,11 @@ const AdminPage = () => {
     bannerAPI.list().then(res => {
       const ytBanner = res.data.filter(banner => banner.image === "Youtube Livestream (EMBED)");
       if (ytBanner.length) {
-        bannerAPI.update(ytBanner[0].id, { isActive: enable }).then(res => {
+        bannerAPI.update(ytBanner[0].id, { isActive: !ytBanner[0].isActive }).then(res => {
           console.log(res);
         });
       } else {
-        bannerAPI.create({ image: "Youtube Livestream (EMBED)", link: "https://www.youtube.com/channel/UCOyNLfCKA5k0PotGj4xTPmg", isActive: enable });
+        bannerAPI.create({ image: "Youtube Livestream (EMBED)", link: streamLink, isActive: enable });
       }
     }).catch(err => {
       console.warn(err);
@@ -199,9 +215,14 @@ const AdminPage = () => {
           <Form.Group>
             <Button
               disabled={youtubeLink ? false : true}
-              onClick={() => handleYoutubeToggle()}
+              onClick={() => createYoutubeBanner(youtubeLink)}
             >
               등록
+            </Button>
+            <Button
+              onClick={() => handleYoutubeToggle(youtubeLink)}
+            >
+              {isYoutubeBannerLive() ? "비활성화" : "활성화"}
             </Button>
           </Form.Group>
         </Form>
