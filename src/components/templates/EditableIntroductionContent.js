@@ -14,7 +14,24 @@ import { Loading } from "../atoms";
 
 const EditableIntroductionContent = ({ intros, desc, onEdit, onRemove, onWrite }) => {
     const { auth } = useSelector(state => state.auth);
-    if (isEmpty(intros)) return <Loading />;
+    if (isEmpty(intros)) return (
+        <Container className="flex-grow-1 introduction-content">
+            <div className="introduction-header-title">{desc}</div>
+            {auth === "admin" ? (
+                <div className="d-flex justify-content-start py-3">
+                    <Button
+                        variant="outline-primary"
+                        className="mr-3"
+                        onClick={() => onWrite()}
+                    >
+                        항목 추가
+                    </Button>
+                </div>
+            ) : (
+                <div />
+            )}
+        </Container>
+    );
 
     return (
         <Container className="flex-grow-1 introduction-content">
