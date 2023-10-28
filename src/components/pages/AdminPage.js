@@ -7,6 +7,9 @@ import { BoardHeader } from "../molecules";
 import DatePicker from "react-datepicker";
 import { CSVLink } from "react-csv";
 
+import 'react-datepicker/dist/react-datepicker.css'
+
+
 import * as paymentAPI from "../../lib/api/payment";
 import * as bannerAPI from "../../lib/api/banner";
 import * as adminsAPI from "../../lib/api/admin";
@@ -193,12 +196,18 @@ const AdminPage = () => {
     handleYoutubeToggle();
   }, [youtubeBannerActive]);
 
-  const submitDeadline = () => {
-    alert(" " + deadlineYear + deadlineSemester + studentFeeDeadline);
-    deadlineAPI.add({ year: deadlineYear, semester: deadlineSemester, due: studentFeeDeadline }).then(res => {
+  const submitDeadline = e => {
+    e.preventDefault();
+    const timezone = studentFeeDeadline.getTimezoneOffset();
+    const dateString = new Date(studentFeeDeadline.getTime() - (timezone * 60 * 1000)).toISOString().split('T')[0];
+    alert(" " + deadlineYear + " " + deadlineSemester + " " + dateString);
+    deadlineAPI.add({ year: deadlineYear, semester: deadlineSemester, due: dateString }).then(res => {
       console.log(res);
+    }).catch(err => {
+      console.error(err);
+      handleUploadModalOpen("fail")
     });
-  }
+  };
 
   const handlePaymentCSV = () => {
     const body = {
@@ -390,7 +399,7 @@ const AdminPage = () => {
       </Container>
       <Container className="flex-grow-1 p-3">
         <BoardHeader title="학생회비 납부기한" />
-        <form onSubmit={() => submitDeadline()}>
+        <form onSubmit={submitDeadline}>
           <Form.Group>
             <Form.Label>
               연도 입력 (예: 2020년도 1학기의 경우 2020)
@@ -402,7 +411,7 @@ const AdminPage = () => {
             <Form.Label>학기 선택</Form.Label>
             <Form.Control
               as="select"
-              value={semester}
+              value={deadlineSemester}
               onChange={e => setDeadlineSemester(e.target.value)}
             >
               <option value="spring">봄학기</option>
@@ -410,7 +419,7 @@ const AdminPage = () => {
             </Form.Control>
 
             <Form.Label>납부기한</Form.Label>
-            <DatePicker selected={studentFeeDeadline} onChange={date => setStudentFeeDeadline(date)} />
+            <DatePicker dateFormat="yyyy-MM-dd" selected={studentFeeDeadline} onChange={date => setStudentFeeDeadline(date)} />
             <Button type="submit">저장</Button>
           </Form.Group>
         </form>
