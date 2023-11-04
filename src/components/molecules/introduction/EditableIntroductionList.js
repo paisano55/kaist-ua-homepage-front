@@ -66,8 +66,10 @@ const EditableIntroductionList = ({ intros }) => {
     const listConvert = useCallback(() => {
         const parents = [];
 
+        console.log(intros);
+
         for (let i = 0; i < intros.length; i++) {
-            if (intros.subIntros.length > 0) {
+            if (intros[i].subIntros.length > 0) {
                 intros[i].isParent = true;
                 intros[i].childrenList = []
                 intros[i].link = `#${intros[i].id}`;

@@ -2,7 +2,7 @@ import { createActions, handleActions } from "redux-actions";
 
 const { init, setIntro, changeField } = createActions({
     INIT: () => { },
-    // intro: {id, parentId, subId, korTitle, engTitle, korContent, engContent}
+    // intro: {id, parentId, subId, prevId, korTitle, engTitle, korContent, engContent}
     SET_INTRO: intro => intro,
     CHANGE_FIELD: ({ key, value }) => ({
         key,
