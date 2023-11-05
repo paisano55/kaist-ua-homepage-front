@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import Quill from "quill";
-import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
 import "./Editor.scss";
 
 const Editor = ({ onChangeField, placeholder, keyName, initialContent }) => {
@@ -10,7 +10,7 @@ const Editor = ({ onChangeField, placeholder, keyName, initialContent }) => {
 
   useEffect(() => {
     quillInstance.current = new Quill(korContentQuill.current, {
-      theme: "snow",
+      theme: "bubble",
       placeholder,
       modules: {
         toolbar: [

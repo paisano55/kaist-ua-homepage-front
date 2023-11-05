@@ -5,24 +5,31 @@ import { EditorFormGroup } from "../molecules";
 import "./EditorHeader.scss";
 
 const IntroEditorHeader = ({ onChangeField, isEdit, intros }) => {
-    const onChange = (key, e) => {
-        onChangeField({ key, value: e.target.value });
-    };
     const intro = useSelector(({ intro }) => intro);
-    const [prevIntros, setPrevIntros] = useState(intros);
+    const [prevIntros, setPrevIntros] = useState([]);
+
+    const onChange = (key, e) => {
+        if (e.target.value === "None") {
+            onChangeField({ key, value: null });
+        } else {
+            onChangeField({ key, value: e.target.value });
+        }
+    };
 
     const handleParentIdChange = (e) => {
         onChange("parentId", e);
-        console.log(intros);
-        console.log(e.target.value);
         if (e.target.value === "None") {
             setPrevIntros(intros);
         } else {
-            console.log(intros.find((intro) => intro.id === e.target.value))
-            setPrevIntros(intros.find((intro) => intro.id === e.target.value));
+            const selectedParent = intros.find((intro) => intro.id === Number(e.target.value));
+            console.log(selectedParent);
+            setPrevIntros(selectedParent.subIntros);
         }
-        console.log(prevIntros);
     };
+
+    useEffect(() => {
+        setPrevIntros(intros);
+    }, [intros]);
 
     return (
         <Container className="border-bottom mt-3">
@@ -46,8 +53,8 @@ const IntroEditorHeader = ({ onChangeField, isEdit, intros }) => {
 
                 {!isEdit ? <Form.Label>추가할 위치 선택</Form.Label> : <Form.Label>편집 시에는 위치 선택이 불가합니다.</Form.Label>}
                 <select className="form-control" variant="outline-primary" value={intro.prevId} onChange={e => onChange("prevId", e)} disabled={isEdit}>
-                    {!intros ? <option value="None">첫 대항목</option> : null}
-                    {prevIntros ? prevIntros.map(intro => <option  key={intro.id} value={intro.id}>"{intro.korTitle}" 뒤에 추가</option>) : <option value="None">첫 소항목</option>}
+                    <option value="None">첫 항목</option>
+                    {prevIntros ? prevIntros.map(intro => <option key={intro.id} value={intro.id}>"{intro.korTitle}" 뒤에 추가</option>) : null}
                 </select>
             </Form>
         </Container>

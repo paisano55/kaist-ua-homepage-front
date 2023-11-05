@@ -196,13 +196,28 @@ const AdminPage = () => {
     handleYoutubeToggle();
   }, [youtubeBannerActive]);
 
+  const checkDeadline = () => {
+    deadlineAPI.get().then(res => {
+      const deadline = res.data.find(deadline => {
+        return deadline.year === Number(deadlineYear) && deadline.semester === deadlineSemester
+      });
+      if (deadline) {
+        setStudentFeeDeadline(new Date(deadline.due));
+        alert("등록된 기한이 있습니다. 기존 등록 기한: " + deadline.due);
+      } else {
+        setStudentFeeDeadline(new Date());
+        alert("등록된 기한이 없습니다.");
+      }
+    });
+  }
+
   const submitDeadline = e => {
     e.preventDefault();
     const timezone = studentFeeDeadline.getTimezoneOffset();
     const dateString = new Date(studentFeeDeadline.getTime() - (timezone * 60 * 1000)).toISOString().split('T')[0];
-    alert(" " + deadlineYear + " " + deadlineSemester + " " + dateString);
     deadlineAPI.add({ year: deadlineYear, semester: deadlineSemester, due: dateString }).then(res => {
       console.log(res);
+      handleUploadModalOpen("success");
     }).catch(err => {
       console.error(err);
       handleUploadModalOpen("fail")
@@ -288,6 +303,7 @@ const AdminPage = () => {
             <Button
               disabled={fileName ? false : true}
               onClick={() => handleUploadModalOpen("confirm")}
+              className="mt-2 mr-2"
             >
               등록
             </Button>
@@ -310,18 +326,21 @@ const AdminPage = () => {
             <Button
               disabled={youtubeLink ? false : true}
               onClick={() => { createYoutubeBanner(youtubeLink) }}
+              className="mt-2 mr-2"
             >
               등록
             </Button>
             <Button
               onClick={() => { setYoutubeBannerActive(true); handleYoutubeToggle() }}
               disabled={youtubeBannerActive === true}
+              className="mt-2 mr-2"
             >
               활성화
             </Button>
             <Button
               onClick={() => { setYoutubeBannerActive(false); handleYoutubeToggle() }}
               disabled={youtubeBannerActive === false}
+              className="mt-2 mr-2"
             >
               비활성화
             </Button>
@@ -361,7 +380,7 @@ const AdminPage = () => {
                 });
               }}
             >
-              <Button variant="outline-primary">
+              <Button variant="outline-primary" className="mt-2 mr-2">
                 내려받기
               </Button>
             </CSVLink>
@@ -390,8 +409,8 @@ const AdminPage = () => {
               </Row>
               {renderBannerList}
               <Row>
-                <Button onClick={addNewBanner}>+</Button>
-                <Button type="submit" onClick={submitBanner}>저장</Button>
+                <Button className="mt-2 mr-2" onClick={addNewBanner}>+</Button>
+                <Button className="mt-2 mr-2" type="submit" onClick={submitBanner}>저장</Button>
               </Row>
             </Container>
           </Form.Group>
@@ -420,7 +439,8 @@ const AdminPage = () => {
 
             <Form.Label>납부기한</Form.Label>
             <DatePicker dateFormat="yyyy-MM-dd" selected={studentFeeDeadline} onChange={date => setStudentFeeDeadline(date)} />
-            <Button type="submit">저장</Button>
+            <Button className="mt-2 mr-2" onClick={checkDeadline}>조회</Button>
+            <Button className="mt-2 mr-2" type="submit">저장</Button>
           </Form.Group>
         </form>
       </Container>
@@ -449,7 +469,7 @@ const AdminPage = () => {
               onChange={value => setAdminKey(value.target.value)}
             />
           </Form.Group>
-          <Button type="submit">
+          <Button type="submit" className="mt-2 mr-2">
             계정 추가
           </Button>
         </form>

@@ -1,50 +1,62 @@
 import React, { useState, useEffect, useCallback } from "react";
+
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { ListGroup } from "react-bootstrap";
+import { Fragment } from "react";
 
 const EditableIntroductionList = ({ intros }) => {
     const { t } = useTranslation(["Introduction"]);
+    const { auth } = useSelector(state => state.auth);
     const [parentList, setParentList] = useState([]);
     const [clicked, setClicked] = useState();
 
     const ParentTab = ({ parent, children }) => {
         const [collpased, setCollpased] = useState(false);
 
-        const handleClick = event => {
+        const handleClick = (event) => {
             const name = event.target.name;
             setClicked(name);
         };
 
         if (children.length > 0) {
             return (
-                <>
+                <Fragment>
                     <ListGroup.Item
                         id={parent.link}
                         name={parent.link}
                         action
                         key={parent.link}
-                        onClick={handleClick.bind(this)}
+                        onClick={
+                            handleClick.bind(this)
+                        }
                         onMouseEnter={() => setCollpased(true)}
                         onMouseLeave={() => setCollpased(false)}
-                        href={parent.link}
+                        href={
+                            parent.link
+                            // auth === "admin" ? parent.link : `${parent.link}_1`
+                        }
                         className={"introduction-button"}
                     >
                         {t("title", { intro: parent })}
                     </ListGroup.Item>
-                    {(collpased || clicked === parent.link || children.find(child => child.link === clicked)) ? children.map(child => (<ListGroup.Item
-                        id={child.link}
-                        name={child.link}
-                        action
-                        key={child.link}
-                        onClick={handleClick.bind(this)}
-                        onMouseEnter={() => setCollpased(true)}
-                        onMouseLeave={() => setCollpased(false)}
-                        href={child.link}
-                        className={"introduction-sub-button"}
-                    >
-                        {t("title", { intro: child })}
-                    </ListGroup.Item>)) : null}
-                </>
+                    {
+                        (collpased || clicked === parent.link || children.find(child => child.link === clicked)) ? children.map(child => (
+                            <ListGroup.Item
+                                id={child.link}
+                                name={child.link}
+                                action
+                                key={child.link}
+                                onClick={handleClick.bind(this)}
+                                onMouseEnter={() => setCollpased(true)}
+                                onMouseLeave={() => setCollpased(false)}
+                                href={child.link}
+                                className={"introduction-sub-button"}
+                            >
+                                {t("title", { intro: child })}
+                            </ListGroup.Item>)) : null
+                    }
+                </Fragment >
             )
         } else {
             return (
@@ -65,8 +77,6 @@ const EditableIntroductionList = ({ intros }) => {
 
     const listConvert = useCallback(() => {
         const parents = [];
-
-        console.log(intros);
 
         for (let i = 0; i < intros.length; i++) {
             if (intros[i].subIntros.length > 0) {
@@ -94,7 +104,7 @@ const EditableIntroductionList = ({ intros }) => {
 
     useEffect(() => {
         listConvert();
-    }, [intros, listConvert]);
+    }, [intros]);
 
     return (
         <ListGroup>
